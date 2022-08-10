@@ -1,11 +1,14 @@
 allow_embedding: false
-package_name: Material_Design_7
-name: Material Design 7
-startup_form: Form1
+package_name: empathy_chat_test
+startup: {type: module, module: startup}
+name: empathy.chat test
+startup_form: null
 runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
 dependencies:
 - app_id: E6HFYSK4HHRI7BTC
   version: {dev: true}
+- app_id: C6ZZPAPN4YYF5NVJ
+  version: {dev: false}
 services:
 - source: /runtime/services/tables.yml
   client_config: {}
