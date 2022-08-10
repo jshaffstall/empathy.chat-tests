@@ -15,20 +15,29 @@ glob.connections = [
   dict(user_id1='o3', user_id2='me'),
 ]
 class MockProfile:
-  pass
+  starred = False
+  def name_item(self):
+    return dict(key=self.name, value=self, subtext="1", title=self.name)
+o1_profile = MockProfile()
+o1_profile.name = "Other 1"
+o2_profile = MockProfile()
+o3_profile = MockProfile()
+o3_profile.name = "Other 3"
 o4_profile = MockProfile()
 o4_profile.name = "Other 4"
+o4_profile.starred = True
 glob.users = {
   'me': 'my profile',
-  'o1': 'o1 profile',
-  'o2': 'o2 profile',
-  'o3': 'o3 profile',
+  'o1': o1_profile,
+  'o2': o2_profile,
+  'o3': o3_profile,
   'o4': o4_profile,
 }
 glob.their_groups = {
   'g1': Group(name='Group 1', group_id='g1', members=['o4'], hosts=['o4'])
 }
 glob.logged_in_user_id = 'me'
+glob.trust_level = 2
 
 
 class CreateFormTest(unittest.TestCase):
@@ -36,6 +45,11 @@ class CreateFormTest(unittest.TestCase):
     items = nc.get_create_group_items()
     self.assertEqual(len(items), 1)
     self.assertEqual(items[0], dict(key='Group 1', value=glob.their_groups['g1'], subtext="(host: Other 4)"))
+    
+  def test_create_user_items(self):
+    name_items, starred_name_list = nc.get_create_user_items()
+    self.assertEqual(name_items, [glob.users[id].name_item() for id in ['o1', 'o3', 'o4']])
+    self.assertEqual(starred_name_list, ["Other 4"])
   
 
 class ConnectionsTest(unittest.TestCase):
