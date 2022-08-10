@@ -2,7 +2,7 @@ import unittest
 from empathy_chat import network_controller as nc
 from empathy_chat import glob
 from empathy_chat import portable as port
-from empathy_chat.groups import Group
+from empathy_chat.groups import Group, MyGroups
 from . import test_helper as th
 
 
@@ -33,6 +33,7 @@ glob.users = {
   'o3': o3_profile,
   'o4': o4_profile,
 }
+glob.my_groups = MyGroups()
 glob.their_groups = {
   'g1': Group(name='Group 1', group_id='g1', members=['o4'], hosts=['o4'])
 }
