@@ -6,28 +6,39 @@ from empathy_chat.groups import Group
 from . import test_helper as th
 
 
-class ConnectionsTest(unittest.TestCase):
-  def setUp(self):
-    glob.connections = [
-      dict(user_id1='me', user_id2='o1'),
-      dict(user_id1='o1', user_id2='me'),
-      dict(user_id1='o1', user_id2='o2'),
-      dict(user_id1='o2', user_id2='o1'),
-      dict(user_id1='me', user_id2='o3'),
-      dict(user_id1='o3', user_id2='me'),
-    ]
-    glob.users = {
-      'me': 'my profile',
-      'o1': 'o1 profile',
-      'o2': 'o2 profile',
-      'o3': 'o3 profile',
-      'o4': 'o4 profils',
-    }
-    glob.their_groups = {
-      'g1': Group(name='Group 1', group_id='g1', members=['o4'])
-    }
-    glob.logged_in_user_id = 'me'
+glob.connections = [
+  dict(user_id1='me', user_id2='o1'),
+  dict(user_id1='o1', user_id2='me'),
+  dict(user_id1='o1', user_id2='o2'),
+  dict(user_id1='o2', user_id2='o1'),
+  dict(user_id1='me', user_id2='o3'),
+  dict(user_id1='o3', user_id2='me'),
+]
+class MockProfile:
+  pass
+o4_profile = MockProfile()
+o4_profile.name = "Other 4"
+glob.users = {
+  'me': 'my profile',
+  'o1': 'o1 profile',
+  'o2': 'o2 profile',
+  'o3': 'o3 profile',
+  'o4': o4_profile,
+}
+glob.their_groups = {
+  'g1': Group(name='Group 1', group_id='g1', members=['o4'], hosts=['o4'])
+}
+glob.logged_in_user_id = 'me'
+
+
+class CreateFormTest(unittest.TestCase):
+  def test_group_items(self):
+    items = nc.get_create_group_items()
+    self.assertEqual(len(items), 1)
+    self.assertEqual(items[0], dict(key='Group 1', value=glob.their_groups['g1'], subtext="(host: Other 4)"))
   
+
+class ConnectionsTest(unittest.TestCase):
   def test_no_connections(self):
     self.assertEqual(nc.get_connections('123'), [])
 
