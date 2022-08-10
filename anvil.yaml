@@ -1,9 +1,3 @@
-allow_embedding: false
-package_name: empathy_chat_test
-startup: {type: module, module: startup}
-name: empathy.chat test
-startup_form: null
-runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
 dependencies:
 - app_id: E6HFYSK4HHRI7BTC
   version: {dev: true}
@@ -13,3 +7,14 @@ services:
 - source: /runtime/services/tables.yml
   client_config: {}
   server_config: {}
+- source: /runtime/services/anvil/users.yml
+  client_config: {allow_signup: false, enable_automatically: true, use_email: true,
+    confirm_email: true}
+  server_config: {user_table: users}
+startup: {type: module, module: startup}
+package_name: empathy_chat_test
+allow_embedding: false
+name: empathy.chat test
+runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
+startup_form: null
+db_schema: {}

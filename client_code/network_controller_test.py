@@ -1,7 +1,7 @@
 import unittest
-from . import network_controller as nc
-from . import glob
-from . import helper as h
+from empathy_chat import network_controller as nc
+from empathy_chat import glob
+from . import test_helper as th
 
 
 class ConnectionsTest(unittest.TestCase):
