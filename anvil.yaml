@@ -17,4 +17,87 @@ allow_embedding: false
 name: empathy.chat test
 runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
 startup_form: null
-db_schema: {}
+db_schema:
+  users:
+    title: Users
+    client: none
+    server: full
+    columns:
+    - name: email
+      admin_ui: {width: 171}
+      type: string
+    - name: first_name
+      admin_ui: {width: 92}
+      type: string
+    - name: last_name
+      admin_ui: {width: 103}
+      type: string
+    - name: enabled
+      admin_ui: {width: 86}
+      type: bool
+    - name: signed_up
+      admin_ui: {width: 131}
+      type: datetime
+    - name: confirmed_email
+      admin_ui: {width: 139}
+      type: bool
+    - name: trust_level
+      admin_ui: {width: 86}
+      type: number
+    - name: phone
+      admin_ui: {width: 118}
+      type: string
+    - name: last_login
+      admin_ui: {width: 123}
+      type: datetime
+    - name: contributor
+      admin_ui: {width: 104}
+      type: bool
+    - name: profile_url
+      admin_ui: {width: 123}
+      type: string
+    - name: url_confirmed_date
+      admin_ui: {width: 159}
+      type: datetime
+    - name: init_date
+      admin_ui: {width: 95}
+      type: datetime
+    - name: time_zone
+      admin_ui: {width: 147}
+      type: string
+    - name: password_hash
+      admin_ui: {width: 99}
+      type: string
+    - name: email_confirmation_key
+      admin_ui: {width: 186}
+      type: string
+    - name: notif_settings
+      admin_ui: {width: 1945.013872}
+      type: simpleObject
+    - name: seeking_buddy
+      admin_ui: {width: 133}
+      type: bool
+    - name: how_empathy
+      admin_ui: {width: 115}
+      type: string
+    - name: profile
+      admin_ui: {width: 124}
+      type: string
+    - name: profile_updated
+      admin_ui: {width: 137}
+      type: datetime
+    - name: last_request_em
+      admin_ui: {width: 144}
+      type: datetime
+    - name: remembered_logins
+      admin_ui: {width: 171}
+      type: simpleObject
+    - name: n_password_failures
+      admin_ui: {width: 178}
+      type: number
+    - name: update_needed
+      admin_ui: {width: 132}
+      type: bool
+    - name: last_invite
+      admin_ui: {width: 144}
+      type: datetime
