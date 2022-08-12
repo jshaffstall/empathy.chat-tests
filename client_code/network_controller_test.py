@@ -14,18 +14,34 @@ glob.connections = [
   dict(user_id1='me', user_id2='o3'),
   dict(user_id1='o3', user_id2='me'),
 ]
-class MockProfile:
-  starred = False
-  def name_item(self):
-    return dict(key=self.name, value=self, subtext="1", title=self.name)
-o1_profile = MockProfile()
-o1_profile.name = "Other 1"
-o2_profile = MockProfile()
-o3_profile = MockProfile()
-o3_profile.name = "Other 3"
-o4_profile = MockProfile()
-o4_profile.name = "Other 4"
-o4_profile.starred = True
+
+# class MockProfile:
+#   starred = False
+#   distance = port.UNLINKED
+  
+#   def name_item(self):
+#     return dict(key=self.name, value=self, subtext="1", title=self.name)
+
+#   @property
+#   def last_active(self):
+#     return self.name
+    
+# o1_profile = MockProfile()
+# o1_profile.name = "Other 1"
+# o1_profile.distance = 1
+# o2_profile = MockProfile()
+# o2_profile.distance = 2
+# o3_profile = MockProfile()
+# o3_profile.name = "Other 3"
+# o3_profile.distance = 1
+# o4_profile = MockProfile()
+# o4_profile.name = "Other 4"
+# o4_profile.common_group_names = ['Group 1']
+# o4_profile.starred = True
+o1_profile = port.UserFull(name="Other 1", last_active=1, distance=1)
+o2_profile = port.UserFull(name="Other 2", last_active=2, distance=2)
+o3_profile = port.UserFull(name="Other 3", last_active=3, distance=1)
+o4_profile = port.UserFull(name="Other 4", last_active=4, common_group_names=["Group 1"])
 glob.users = {
   'me': 'my profile',
   'o1': o1_profile,
