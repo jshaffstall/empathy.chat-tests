@@ -34,6 +34,16 @@ glob.logged_in_user_id = 'me'
 glob.trust_level = 2
 
 
+class RelationshipsTest(unittest.TestCase):
+  def test_self_relationships(self):
+    rel = nc.get_relationships(glob.logged_in_user_id)
+    self.assertEqual(rel, [])
+    
+  def test_unlinked_relationships(self):
+    rel = nc.get_relationships('o4')
+    self.assertEqual(rel, [])
+
+
 class CreateFormTest(unittest.TestCase):
   def test_group_items(self):
     items = nc.get_create_group_items()
