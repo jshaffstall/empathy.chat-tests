@@ -7,17 +7,17 @@ from . import test_helper as th
 
 
 glob.connections = [
-  dict(user_id1='me', user_id2='o1'),
-  dict(user_id1='o1', user_id2='me'),
+  dict(user_id1='me', user_id2='o1', relationship2to1='first other', date_described=21),
+  dict(user_id1='o1', user_id2='me', relationship2to1='other first', date_described=22),
   dict(user_id1='o1', user_id2='o2'),
   dict(user_id1='o2', user_id2='o1'),
   dict(user_id1='me', user_id2='o3'),
   dict(user_id1='o3', user_id2='me'),
 ]
-my_profile = port.UserFull(name="Tim", last_active=10, distance=0)
-o1_profile = port.UserFull(name="Other 1", last_active=1, distance=1)
-o2_profile = port.UserFull(name="Other 2", last_active=2, distance=2)
-o3_profile = port.UserFull(name="Other 3", last_active=3, distance=1)
+my_profile = port.UserFull(name="Tim", last_active=10, distance=0, degree=0)
+o1_profile = port.UserFull(name="Other 1", first="Other", last_active=1, distance=1, degree=1)
+o2_profile = port.UserFull(name="Other 2", last_active=2, distance=2, degree=2)
+o3_profile = port.UserFull(name="Other 3", last_active=3, distance=1, degree=1)
 o4_profile = port.UserFull(name="Other 4", last_active=4, common_group_names=["Group 1"], starred=True)
 glob.users = {
   'me': my_profile,
@@ -35,15 +35,29 @@ glob.trust_level = 2
 
 
 class RelationshipsTest(unittest.TestCase):
-  def test_self_relationships(self):
+  def test_self(self):
     rel = nc.get_relationships(glob.logged_in_user_id)
     self.assertEqual(rel, [])
     
-  def test_unlinked_relationships(self):
+  def test_unlinked(self):
     rel = nc.get_relationships('o4')
     self.assertEqual(rel, [])
 
+  def test_single_close(self):
+    rel = nc.get_relationships('o1')
+    self.assertEqual(rel, [{
+      "via": False,
+      "whose": "my",
+      "desc": "first other",
+      "date": 21,
+      "child": None,
+      "their": "other first",
+      "their_date": 22,
+      "their_name": "Other",
+      "their_id": 'o1',
+    }])
 
+                     
 class CreateFormTest(unittest.TestCase):
   def test_group_items(self):
     items = nc.get_create_group_items()
