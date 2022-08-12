@@ -38,12 +38,13 @@ glob.connections = [
 # o4_profile.name = "Other 4"
 # o4_profile.common_group_names = ['Group 1']
 # o4_profile.starred = True
+my_profile = port.UserFull(name="Tim", last_active=10, distance=0)
 o1_profile = port.UserFull(name="Other 1", last_active=1, distance=1)
 o2_profile = port.UserFull(name="Other 2", last_active=2, distance=2)
 o3_profile = port.UserFull(name="Other 3", last_active=3, distance=1)
 o4_profile = port.UserFull(name="Other 4", last_active=4, common_group_names=["Group 1"])
 glob.users = {
-  'me': 'my profile',
+  'me': my_profile,
   'o1': o1_profile,
   'o2': o2_profile,
   'o3': o3_profile,
