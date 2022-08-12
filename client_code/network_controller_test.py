@@ -9,7 +9,7 @@ from . import test_helper as th
 glob.connections = [
   dict(user_id1='me', user_id2='o1', relationship2to1='first other', date_described=21),
   dict(user_id1='o1', user_id2='me', relationship2to1='other first', date_described=22),
-  dict(user_id1='o1', user_id2='o2'),
+  dict(user_id1='o1', user_id2='o2', relationship2to1='second other', date_described=31),
   dict(user_id1='o2', user_id2='o1'),
   dict(user_id1='me', user_id2='o3'),
   dict(user_id1='o3', user_id2='me'),
@@ -55,6 +55,21 @@ class RelationshipsTest(unittest.TestCase):
       "their_date": 22,
       "their_name": "Other",
       "their_id": 'o1',
+    }])
+
+  def test_single_2nd(self):
+    rel = nc.get_relationships('o2')
+    self.assertEqual(rel, [{
+      "via": "",
+      "whose": f"{glob.users['o1'].name}'s",
+      "desc": "second other",
+      "date": 31,
+      "child": {"via": False,
+                "whose": "my", 
+                "desc": "first other",
+                "date": 21,
+                "child": None,
+               },
     }])
 
                      
