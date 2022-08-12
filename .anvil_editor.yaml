@@ -4,7 +4,8 @@ unique_ids:
     network_controller_test: '1660142763256591198854454.2004'
     startup: '1660142739449748665602481.2224'
     test_helper: '1660142790591663198886025.6531'
-  server_modules: {}
+  server_modules:
+    server_tests: '1660322505938286709939784.8614'
   assets:
     standard-page.html: REIEKOHRVECJU65MNKPADLKVQR5PYASV
     theme.css: LKQJWFYOYI2QSHSFZRXNC4COKX3KY3SL

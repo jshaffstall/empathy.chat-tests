@@ -49,6 +49,7 @@ class CreateFormTest(unittest.TestCase):
     
   def test_create_user_items(self):
     name_items, starred_name_list = nc.get_create_user_items()
+    self.assertEqual(len(name_items), 3)
     self.assertEqual(name_items, [glob.users[id].name_item() for id in ['o1', 'o3', 'o4']])
     self.assertEqual(starred_name_list, ["Other 4"])
   
