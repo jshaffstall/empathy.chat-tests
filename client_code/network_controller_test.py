@@ -7,12 +7,12 @@ from . import test_helper as th
 
 
 glob.connections = [
-  dict(user_id1='me', user_id2='o1', relationship2to1='first other', date_described=21),
-  dict(user_id1='o1', user_id2='me', relationship2to1='other first', date_described=22),
-  dict(user_id1='o1', user_id2='o2', relationship2to1='second other', date_described=31),
-  dict(user_id1='o2', user_id2='o1'),
-  dict(user_id1='me', user_id2='o3'),
-  dict(user_id1='o3', user_id2='me'),
+  dict(user1_id='me', user2_id='o1', relationship2to1='first other', date_described=21),
+  dict(user1_id='o1', user2_id='me', relationship2to1='other first', date_described=22),
+  dict(user1_id='o1', user2_id='o2', relationship2to1='second other', date_described=31),
+  dict(user1_id='o2', user2_id='o1'),
+  dict(user1_id='me', user2_id='o3'),
+  dict(user1_id='o3', user2_id='me'),
 ]
 my_profile = port.UserFull(name="Tim", last_active=10, distance=0, degree=0)
 o1_profile = port.UserFull(name="Other 1", first="Other", last_active=1, distance=1, degree=1)
