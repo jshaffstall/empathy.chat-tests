@@ -64,12 +64,12 @@ class RelationshipsTest(unittest.TestCase):
       "whose": f"{glob.users['o1'].name}'s",
       "desc": "second other",
       "date": 31,
-      "child": {"via": False,
-                "whose": "my", 
-                "desc": "first other",
-                "date": 21,
-                "child": None,
-               },
+      "child": None, #{"via": False,
+               #  "whose": "my", 
+               #  "desc": "first other",
+               #  "date": 21,
+               #  "child": None,
+               # },
     }])
 
                      
