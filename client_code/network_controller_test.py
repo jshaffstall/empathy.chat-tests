@@ -61,7 +61,9 @@ class RelationshipsTest(unittest.TestCase):
     rel = nc.get_relationships('o2')
     self.assertEqual(rel, [{
       "via": "",
+      "via_id": None,
       "whose": f"{glob.users['o1'].name}'s",
+      "whose_id": 'o1',
       "desc": "second other",
       "date": 31,
       "child": None, #{"via": False,
