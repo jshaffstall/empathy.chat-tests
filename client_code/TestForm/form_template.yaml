@@ -35,14 +35,6 @@ components:
       layout_properties: {grid_position: 'NWIGHO,WBHBNG'}
       event_bindings: {click: slowtest_button_click}
       name: slowtest_button
-    - type: Button
-      properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
-        foreground: '', visible: true, text: Auto end-to-end tests, font_size: null,
-        font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false,
-        background: '', bold: false, underline: false, icon: ''}
-      layout_properties: {grid_position: 'PANECG,VMUSSI'}
-      event_bindings: {click: autotest_butten_click}
-      name: autotest_butten
     - type: TextBox
       properties: {role: null, align: left, hide_text: false, tooltip: '', placeholder: '',
         border: '', enabled: true, foreground: '', visible: true, text: '', font_size: null,
@@ -75,6 +67,14 @@ components:
       layout_properties: {grid_position: 'MDYDAL,UHDJZK'}
       event_bindings: {click: test_proposal_button_click}
       name: test_proposal_button
+    - type: Button
+      properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+        foreground: '', visible: true, text: Auto end-to-end tests, font_size: null,
+        font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false,
+        background: '', bold: false, underline: false, icon: ''}
+      layout_properties: {grid_position: 'RHBMLP,FQZABO'}
+      event_bindings: {click: autotest_butten_click}
+      name: autotest_butten
     - type: Spacer
       properties: {visible: true, spacing_above: small, spacing_below: small, height: '16',
         tooltip: ''}

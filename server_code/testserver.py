@@ -1,12 +1,23 @@
-# import anvil.users
+import anvil.users
 import anvil.tables
 from anvil.tables import app_tables
 import anvil.server
+import anvil.secrets as secrets
 from empathy_chat import server_misc as sm
 from empathy_chat import accounts
 from empathy_chat.server_misc import authenticated_callable
 from empathy_chat import matcher
 from empathy_chat import portable
+
+
+@anvil.server.callable
+def force_login(user_id=None):
+  if user_id:
+    user = app_tables.users.get_by_id(user_id)
+  else:
+    user = app_tables.users.get(email=secrets.get_secret('admin_email'))
+  anvil.users.force_login(user)
+  return user
 
 
 @anvil.server.callable

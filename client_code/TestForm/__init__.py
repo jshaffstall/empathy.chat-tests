@@ -1,9 +1,11 @@
 from ._anvil_designer import TestFormTemplate
 from anvil import *
 import anvil.server
+import anvil.users
 from empathy_chat.MenuForm.DashForm.CreateForm import CreateForm
 from empathy_chat import portable as t
 from empathy_chat import auto_test
+from ..test_helper import UserLoggedIn
 
 
 class TestForm(TestFormTemplate):
@@ -30,19 +32,20 @@ class TestForm(TestFormTemplate):
 
   def test_proposal_button_click(self, **event_args):
     user_id = self.test_requestuser_drop_down.selected_value
-    form_item = t.Proposal().create_form_item()
-    content = CreateForm(item=form_item)
-    self.proposal_alert = content
-    out = alert(content=self.proposal_alert,
-                title="New Empathy Chat Proposal",
-                large=True,
-                dismissible=False,
-                buttons=[])
-    if user_id and out is True:
-      proposal = content.proposal()
-      anvil.server.call('test_add_request', user_id, proposal)
-    else:
-      alert("User and saved proposal required to add request.")
+    with UserLoggedIn(user_id):
+      form_item = t.Proposal().create_form_item()
+      content = CreateForm(item=form_item)
+      self.proposal_alert = content
+      out = alert(content=self.proposal_alert,
+                  title="New Empathy Chat Proposal",
+                  large=True,
+                  dismissible=False,
+                  buttons=[])
+      if user_id and out is True:
+        proposal = content.proposal()
+        anvil.server.call('test_add_request', user_id, proposal)
+      else:
+        alert("User and saved proposal required to add request.")
 
   def test_clear_click(self, **event_args):
     anvil.server.call('test_clear')
@@ -55,12 +58,16 @@ class TestForm(TestFormTemplate):
   def test_other_action_click(self, **event_args):
     action = self.test_other_action_drop_down.selected_value
     user_id = self.test_requestuser_drop_down.selected_value
-    anvil.server.call(action, user_id=user_id)
+    with UserLoggedIn(user_id):
+      anvil.server.call(action, user_id=user_id)
 
   def autotest_butten_click(self, **event_args):
     """This method is called when the button is clicked"""
-    auto_test.run_now_test()
+    user_id = self.test_requestuser_drop_down.selected_value
+    with UserLoggedIn(user_id):
+      auto_test.run_now_test()
 
   def slowtest_button_click(self, **event_args):
     """This method is called when the button is clicked"""
-    anvil.server.call('slow_tests')
+    with UserLoggedIn():
+      anvil.server.call('slow_tests')

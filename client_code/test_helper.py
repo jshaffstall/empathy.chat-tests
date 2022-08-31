@@ -1,3 +1,6 @@
+import anvil.users
+
+
 class MockServer:
   def __init__(self, return_values):
     self.return_values = return_values
@@ -19,4 +22,13 @@ class DispatchCollector:
     
   def catch_dispatches(self, dispatch):
     self.dispatches.append(dispatch)
+
+
+class UserLoggedIn:
+  def __init__(self, user_id=None):
+    self._user_id = user_id
+  def __enter__(self):
+    return anvil.server.call('force_login', self._user_id)
+  def __exit__(self, exc_type, exc_value, exc_tb):
+    anvil.users.logout()
     
