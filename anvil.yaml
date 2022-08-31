@@ -30,7 +30,7 @@ db_schema:
     - name: group
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: groups
     - name: invite
       admin_ui: {width: 200}
       type: link_single
@@ -49,7 +49,7 @@ db_schema:
     - name: group
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: groups
     - name: created
       admin_ui: {width: 200}
       type: datetime
@@ -150,7 +150,7 @@ db_schema:
     - name: proposal
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: proposals
     - name: current
       admin_ui: {width: 78.015872}
       type: bool
@@ -261,7 +261,7 @@ db_schema:
     server: full
     columns:
     - name: expire_date
-      admin_ui: {width: 220.663}
+      admin_ui: {width: 195.667}
       type: datetime
     - name: current
       admin_ui: {width: 91}
@@ -274,7 +274,7 @@ db_schema:
       type: link_single
       target: proposals
     - name: start_date
-      admin_ui: {width: 223}
+      admin_ui: {width: 252}
       type: datetime
     - name: start_now
       admin_ui: {width: 112}
@@ -285,7 +285,10 @@ db_schema:
     - name: users_accepting
       admin_ui: {width: 158}
       type: link_multiple
-      target: null
+      target: users
+    - name: fully_accepted
+      admin_ui: {width: 200}
+      type: bool
     - name: accept_date
       admin_ui: {width: 200}
       type: datetime
@@ -295,9 +298,6 @@ db_schema:
     - name: missed_pings
       admin_ui: {width: 142}
       type: number
-    - name: fully_accepted
-      admin_ui: {width: 200}
-      type: bool
   stars:
     title: Stars
     client: none
@@ -306,18 +306,18 @@ db_schema:
     - name: user1
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
     - name: user2
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
   proposals:
     title: Proposals
     client: none
     server: full
     columns:
     - name: created
-      admin_ui: {width: 218}
+      admin_ui: {width: 200}
       type: datetime
     - name: current
       admin_ui: {width: 95}
@@ -325,9 +325,9 @@ db_schema:
     - name: user
       admin_ui: {width: 161}
       type: link_single
-      target: null
+      target: users
     - name: last_edited
-      admin_ui: {width: 210}
+      admin_ui: {width: 200}
       type: datetime
     - name: eligible
       admin_ui: {width: 98}
@@ -335,7 +335,7 @@ db_schema:
     - name: eligible_users
       admin_ui: {width: 200}
       type: link_multiple
-      target: null
+      target: users
     - name: eligible_groups
       admin_ui: {width: 200}
       type: link_multiple
@@ -361,7 +361,7 @@ db_schema:
     - name: proposal_time
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: proposal_times
     - name: match_commence
       admin_ui: {width: 200}
       type: datetime
@@ -388,11 +388,11 @@ db_schema:
     - name: from_user
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
     - name: to_user
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
     - name: message
       admin_ui: {width: 200}
       type: string
@@ -411,11 +411,11 @@ db_schema:
     - name: test_times
       admin_ui: {width: 200}
       type: link_multiple
-      target: null
+      target: proposal_times
     - name: test_proposals
       admin_ui: {width: 200}
       type: link_multiple
-      target: null
+      target: proposals
   groups:
     title: Groups
     client: none
@@ -427,7 +427,7 @@ db_schema:
     - name: hosts
       admin_ui: {width: 200}
       type: link_multiple
-      target: null
+      target: users
     - name: created
       admin_ui: {width: 200}
       type: datetime
@@ -442,11 +442,11 @@ db_schema:
     - name: user1
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
     - name: user2
       admin_ui: {width: 200}
       type: link_single
-      target: null
+      target: users
     - name: date
       admin_ui: {width: 200}
       type: datetime
