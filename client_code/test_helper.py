@@ -1,4 +1,5 @@
 import anvil.users
+from empathy_chat import glob
 
 
 class MockServer:
@@ -28,7 +29,14 @@ class UserLoggedIn:
   def __init__(self, user_id=None):
     self._user_id = user_id
   def __enter__(self):
-    return anvil.server.call('force_login', self._user_id)
+    user = anvil.server.call('force_login', self._user_id)
+    glob.logged_in_user = user
+    glob.logged_in_user_id = user.get_id()
+    glob.trust_level = user['trust_level']
+    return user
   def __exit__(self, exc_type, exc_value, exc_tb):
     anvil.users.logout()
+    glob.trust_level = 0
+    glob.logged_in_user = None
+    glob.logged_in_user_id = ""
     

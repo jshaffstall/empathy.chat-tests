@@ -4,7 +4,8 @@ import anvil.server
 import anvil.users
 from empathy_chat.MenuForm.DashForm.CreateForm import CreateForm
 from empathy_chat import portable as t
-from empathy_chat import auto_test
+from empathy_chat import glob
+from .. import auto_test
 from ..test_helper import UserLoggedIn
 
 
@@ -33,6 +34,7 @@ class TestForm(TestFormTemplate):
   def test_proposal_button_click(self, **event_args):
     user_id = self.test_requestuser_drop_down.selected_value
     with UserLoggedIn(user_id):
+      glob.populate_lazy_vars()
       form_item = t.Proposal().create_form_item()
       content = CreateForm(item=form_item)
       self.proposal_alert = content
@@ -44,8 +46,6 @@ class TestForm(TestFormTemplate):
       if user_id and out is True:
         proposal = content.proposal()
         anvil.server.call('test_add_request', user_id, proposal)
-      else:
-        alert("User and saved proposal required to add request.")
 
   def test_clear_click(self, **event_args):
     anvil.server.call('test_clear')
