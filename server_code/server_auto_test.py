@@ -1,5 +1,6 @@
 # import anvil.users
 import anvil.server
+import anvil.secrets as secrets
 import anvil.tables
 from anvil.tables import app_tables, order_by
 import anvil.tables.query as q
@@ -21,8 +22,8 @@ def name_mock(user, to_user):
 
 class NamesTest(unittest.TestCase):
   def setUp(self):
-    self.user = app_tables.users.get(email="hugetim@gmail.com") #anvil.users.get_user()
-    self.poptibo = app_tables.users.get(email="poptibo@yahoo.com")
+    self.user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
+    self.poptibo = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
     
   def test_single_name(self):
     self.assertEqual("Peter", n._names(["Peter"], to_user=self.poptibo, name_fn=name_mock))
@@ -47,8 +48,8 @@ class InviteBasicTest(unittest.TestCase):
 class InviteTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
-    self.user = app_tables.users.get(email="hugetim@gmail.com") #anvil.users.get_user()
-    self.poptibo = app_tables.users.get(email="poptibo@yahoo.com")
+    self.user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
+    self.poptibo = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
 
   def test_invalid_add(self):
     invite1 = invites.Invite(inviter_guess="6666")
@@ -200,7 +201,7 @@ class NotifyConnectedTest(unittest.TestCase):
 class PortUserTest(unittest.TestCase):
   def test_from_logged_in(self):
     port_user = port.User.from_logged_in()
-    user = app_tables.users.get(email="hugetim@gmail.com") #anvil.users.get_user()
+    user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
     self.assertEqual(port_user.user_id, user.get_id())
     self.assertEqual(port_user.distance, 0)
     
