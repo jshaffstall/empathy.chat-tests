@@ -18,14 +18,14 @@ import time
 #     self.assertEqual(new_group['name'], "New Group")
 
 
-# def client_auto_tests():
-#   from anvil_extras.utils import timed
-  
-#   @timed
-#   def tests_run_client_side():
-#     from . import exchange_controller_test as ect
-#     ect.ExchangeControllerTest().main()
-#   tests_run_client_side()
+def client_auto_tests():
+  from anvil_extras.utils import timed
+
+  @timed
+  def tests_run_client_side():
+    from . import invited_test as it
+    it.InvitedTest().main()
+  tests_run_client_side()
   
   
 def test_alert(content, handler):

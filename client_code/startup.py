@@ -1,5 +1,6 @@
 import anvil.server
 from anvil import *
+from . import auto_test
 # from anvil_extras.utils import timed
 # from . import network_controller_test
 
@@ -10,6 +11,6 @@ from anvil import *
 #   network_controller_test.CreateFormTest().main()
 
 
-# client_auto_tests()
+auto_test.client_auto_tests()
 anvil.server.call('server_auto_tests')
 open_form('TestForm')
