@@ -21,7 +21,7 @@ class DispatchCollector:
   def __init__(self):
     self.dispatches = []
     
-  def catch_dispatches(self, dispatch):
+  def catch_dispatch(self, dispatch):
     self.dispatches.append(dispatch)
 
 
