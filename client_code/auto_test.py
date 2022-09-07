@@ -24,6 +24,7 @@ def client_auto_tests():
   @timed
   def tests_run_client_side():
     from . import invited_test as it
+    it.Invited1Test().main()
     it.InvitedTest().main()
   tests_run_client_side()
   

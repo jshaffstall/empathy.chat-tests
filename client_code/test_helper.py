@@ -25,6 +25,30 @@ class DispatchCollector:
     self.dispatches.append(dispatch)
 
 
+notifications_shown = []
+
+
+class MockNotification:
+  def __init__(self, message, title="", style="info", timeout=2):
+    self.message = message
+    self.title = title
+    self.style = style
+    self.timeout = timeout
+
+  def __repr__(self):
+    return f"MockNotification({self.message!r}, {self.title!r}, {self.style!r}, {self.timeout!r})"
+
+  def __eq__(self, other):
+    if self.__class__ is other.__class__:
+      return repr(self) == repr(other)
+    else:
+      return NotImplemented
+  
+  def show(self):
+    global notifications
+    notifications_shown.append(self)
+
+
 class UserLoggedIn:
   def __init__(self, user_id=None):
     self._user_id = user_id
