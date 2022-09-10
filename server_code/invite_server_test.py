@@ -7,6 +7,7 @@ from empathy_chat import invites_server
 from empathy_chat import parameters as p
 from empathy_chat import connections as c
 from empathy_chat import server_misc as sm
+from empathy_chat.exceptions import MistakenGuessError
 from anvil_extras.server_utils import timed
 import unittest
 
@@ -95,15 +96,13 @@ class InviteTest(unittest.TestCase):
   @timed
   def test_logged_in_visit_mistaken_inviter_guess(self):
     self.add_link_invite()
-    invite2a = invites.Invite(link_key=self.invite1.link_key)
-#     s_invite2a = invites_server.Invite(invite2a)
-#     errors = s_invite2a.visit(user=self.poptibo)
-    errors = invite2a.relay('visit', {'user': self.poptibo})
-    self.assertTrue(errors)
-    self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)
-    # with self.assertRaises(Exception) as context:
-    #   gateways._verify_user_permission(self.test_user2, self.test_article_row)      
-    # self.assertTrue('does not belong to this user' in str(context.exception))
+    # invite2a = invites.Invite(link_key=self.invite1.link_key)
+    # errors = invite2a.relay('visit', {'user': self.poptibo})
+    with self.assertRaises(MistakenGuessError) as context:
+      invite = invites_server.load_from_link_key(self.s_invite1.link_key)
+    # self.assertTrue(errors)
+    # self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)  
+    self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
 
   def test_logged_in_visit_correct_inviter_guess(self):
     self.add_link_invite()
