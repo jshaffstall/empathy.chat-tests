@@ -93,7 +93,7 @@ class InviteTest(unittest.TestCase):
       test_prompt.delete()
      
   @timed
-  def test_logged_in_visit1(self):
+  def test_logged_in_visit_mistaken_inviter_guess(self):
     self.add_link_invite()
     invite2a = invites.Invite(link_key=self.invite1.link_key)
 #     s_invite2a = invites_server.Invite(invite2a)
@@ -101,16 +101,19 @@ class InviteTest(unittest.TestCase):
     errors = invite2a.relay('visit', {'user': self.poptibo})
     self.assertTrue(errors)
     self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)
+    # with self.assertRaises(Exception) as context:
+    #   gateways._verify_user_permission(self.test_user2, self.test_article_row)      
+    # self.assertTrue('does not belong to this user' in str(context.exception))
 
-  def test_logged_in_visit2(self):
+  def test_logged_in_visit_correct_inviter_guess(self):
     self.add_link_invite()
     self.s_invite1.inviter_guess = self.poptibo['phone'][-4:]
     self.s_invite1.edit_invite()
-    invite2b = invites.Invite(link_key=self.s_invite1.link_key)
-    s_invite2b = invites_server.Invite(invite2b)
-    errors = s_invite2b.visit(**{'user': self.poptibo})
-    self.assertFalse(errors)
-    self.assertEqual(s_invite2b.invitee, self.poptibo)
+    # invite2b = invites.Invite(link_key=self.s_invite1.link_key)
+    # s_invite2b = invites_server.Invite(invite2b)
+    # errors = s_invite2b.visit(**{'user': self.poptibo})
+    invite = invites_server.load_from_link_key(self.s_invite1.link_key)
+    self.assertEqual(invite.rel_to_inviter, 'test subject 1')
 
   def test_new_visit(self):
     self.add_link_invite()
