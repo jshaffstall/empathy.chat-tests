@@ -89,7 +89,7 @@ class InviteTest(unittest.TestCase):
     test_prompts = app_tables.prompts.search(user=self.user, 
                                              spec={'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
     #print({'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
-    self.assertEqual(len(test_prompts), 1)
+    self.assertEqual(len(test_prompts), 0)
     for test_prompt in test_prompts:
       test_prompt.delete()
      
@@ -103,6 +103,11 @@ class InviteTest(unittest.TestCase):
     # self.assertTrue(errors)
     # self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)  
     self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
+    test_prompts = app_tables.prompts.search(user=self.user, 
+                                             spec={'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
+    self.assertEqual(len(test_prompts), 1)
+    for test_prompt in test_prompts:
+      test_prompt.delete()
 
   def test_logged_in_visit_correct_inviter_guess(self):
     self.add_link_invite()
