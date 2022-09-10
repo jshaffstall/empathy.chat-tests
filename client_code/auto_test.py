@@ -20,15 +20,25 @@ import time
 
 def client_auto_tests():
   from anvil_extras.utils import timed
-
+  from . import invited_test as it
+  
   @timed
   def tests_run_client_side():
-    from . import invited_test as it
     it.Invited1Test().main()
     it.InvitedTest().main()
   tests_run_client_side()
   
   
+def client_slow_tests():
+  from anvil_extras.utils import timed
+  from . import invited_test as it
+  
+  @timed
+  def tests_run_client_side():
+    it.InvitedSlowTest().main()
+  tests_run_client_side()
+
+
 def test_alert(content, handler):
   content.set_event_handler('x-close-alert', handler)
   

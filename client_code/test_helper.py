@@ -25,7 +25,7 @@ class DispatchCollector:
     self.dispatches.append(dispatch)
 
 
-notifications_shown = []
+_notifications_shown = []
 
 
 class MockNotification:
@@ -45,8 +45,17 @@ class MockNotification:
       return NotImplemented
   
   def show(self):
-    global notifications
-    notifications_shown.append(self)
+    global _notifications_shown
+    _notifications_shown.append(self)
+
+  @staticmethod
+  def get_notifications_shown():
+    return _notifications_shown
+  
+  @staticmethod
+  def clear_notifications_shown():
+    global _notifications_shown
+    _notifications_shown.clear()
 
 
 class UserLoggedIn:

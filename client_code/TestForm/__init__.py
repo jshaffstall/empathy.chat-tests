@@ -71,3 +71,7 @@ class TestForm(TestFormTemplate):
     """This method is called when the button is clicked"""
     with UserLoggedIn():
       anvil.server.call('slow_tests')
+
+  def slow_client_button_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    auto_test.client_slow_tests()

@@ -1,5 +1,5 @@
 import unittest
-from .test_helper import MockServer, DispatchCollector, MockNotification, notifications_shown
+from .test_helper import MockServer, DispatchCollector, MockNotification
 from empathy_chat import parameters as p
 from empathy_chat import invites
 from empathy_chat import invited
@@ -61,20 +61,31 @@ class InvitedTest(unittest.TestCase):
     invite.relay = lambda name: [test_error]
     invited.Notification = MockNotification
     invited.submit_response(invite)
+    notifications_shown = MockNotification.get_notifications_shown()
     self.assertEqual(notifications_shown[0], MockNotification(p.MISTAKEN_INVITER_GUESS_ERROR, title="Mistaken Invite", style="info", timeout=None))
     self.assertEqual(len(self.collector.dispatches), 1)
     self.assertEqual(self.collector.dispatches[0].title, "failure")
 
+  def tearDown(self):
+    publisher.unsubscribe("invited", self)
+    MockNotification.clear_notifications_shown()
+
+
+class InvitedSlowTest(unittest.TestCase):
+  def setUp(self):
+    self.collector = DispatchCollector()
+    publisher.subscribe("invited", self, self.collector.catch_dispatch)
+  
   def test_success_no_logged_in_user(self):
     invite = invites.Invite(rel_to_invitee="12345678", invitee_guess="1234", link_key="xxx")
     invite.relay = lambda name: []
     invited.submit_response(invite)
+    notifications_shown = MockNotification.get_notifications_shown()
     self.assertFalse(notifications_shown)
     self.assertEqual(len(self.collector.dispatches), 1)
     self.assertEqual(self.collector.dispatches[0].title, "go_invited2")
-  
+
   def tearDown(self):
-    global notifications_shown
     publisher.unsubscribe("invited", self)
-    notifications_shown = []
+    MockNotification.clear_notifications_shown()
     
