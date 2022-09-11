@@ -1,3 +1,4 @@
+import anvil.users
 import anvil.secrets as secrets
 import anvil.tables
 from anvil.tables import app_tables, order_by
@@ -26,6 +27,7 @@ class InviteTest(unittest.TestCase):
     self.start_time = sm.now()
     self.user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
     self.poptibo = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
+    anvil.users.force_login(self.user)
 
   def test_invalid_add(self):
     invite1 = invites.Invite(inviter_guess="6666")
@@ -98,6 +100,7 @@ class InviteTest(unittest.TestCase):
     self.add_link_invite()
     # invite2a = invites.Invite(link_key=self.invite1.link_key)
     # errors = invite2a.relay('visit', {'user': self.poptibo})
+    anvil.users.force_login(self.poptibo)
     with self.assertRaises(MistakenGuessError) as context:
       invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     # self.assertTrue(errors)
@@ -108,6 +111,7 @@ class InviteTest(unittest.TestCase):
     self.assertEqual(len(test_prompts), 1)
     for test_prompt in test_prompts:
       test_prompt.delete()
+    
 
   def test_logged_in_visit_correct_inviter_guess(self):
     self.add_link_invite()
@@ -116,6 +120,7 @@ class InviteTest(unittest.TestCase):
     # invite2b = invites.Invite(link_key=self.s_invite1.link_key)
     # s_invite2b = invites_server.Invite(invite2b)
     # errors = s_invite2b.visit(**{'user': self.poptibo})
+    anvil.users.force_login(self.poptibo)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
 
@@ -161,3 +166,4 @@ class InviteTest(unittest.TestCase):
     test_invites = app_tables.invites.search(user1=q.any_of(self.user, self.poptibo), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
+    anvil.users.logout()
