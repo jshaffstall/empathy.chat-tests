@@ -3,14 +3,18 @@ from empathy_chat import glob
 
 
 class MockServer:
-  def __init__(self, return_values):
+  def __init__(self, return_values, error=None, error_text=""):
     self.return_values = return_values
     self.call_args = {}
     self.call_kwargs = {}
+    self.error = error
+    self.error_text = error_text
 
   def call(self, method, *args, **kwargs):
     self.call_args[method] = args
     self.call_kwargs[method] = kwargs
+    if self.error:
+      raise self.error(self.error_text)
     return self.return_values.get(method)
 
   def call_s(self, method, *args, **kwargs):
