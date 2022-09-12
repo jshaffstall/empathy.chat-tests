@@ -1,4 +1,5 @@
 import unittest
+from .server_auto_test import ADMIN, USER2
 from empathy_chat.exchanges import Exchange, Format
 from empathy_chat import exchange_interactor as ei
 from empathy_chat.exceptions import RowMissingError
@@ -18,8 +19,8 @@ from anvil import secrets
 #     an_exchange = Exchange("1234", [], [])
 #     self.assertFalse(an_exchange.my_slider_value())
 
-hugetim_id = app_tables.users.get(email=secrets.get_secret('admin_email')).get_id()
-poptibo_id = app_tables.users.get(email=secrets.get_secret('test_user2_email')).get_id()
+hugetim_id = ADMIN.get_id()
+poptibo_id = USER2.get_id()
 
 
 class MockRepo:

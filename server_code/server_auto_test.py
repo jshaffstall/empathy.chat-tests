@@ -13,24 +13,24 @@ from empathy_chat import notifies as n
 from empathy_chat import portable as port
 
 
+ADMIN = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
+USER2 = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
+
+
 def name_mock(user, to_user):
   return user
 
 
-class NamesTest(unittest.TestCase):
-  def setUp(self):
-    self.user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
-    self.poptibo = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
-    
+class NamesTest(unittest.TestCase):   
   def test_single_name(self):
-    self.assertEqual("Peter", n._names(["Peter"], to_user=self.poptibo, name_fn=name_mock))
+    self.assertEqual("Peter", n._names(["Peter"], to_user=USER2, name_fn=name_mock))
     
   def test_two_names(self):
-    self.assertEqual("Peter and Paul", n._names(["Peter", "Paul"], to_user=self.poptibo, name_fn=name_mock))
+    self.assertEqual("Peter and Paul", n._names(["Peter", "Paul"], to_user=USER2, name_fn=name_mock))
 
   def test_three_plus_names(self):  
-    self.assertEqual("Peter, Paul, and Mary", n._names(["Peter", "Paul", "Mary"], to_user=self.poptibo, name_fn=name_mock))
-    self.assertEqual("Peter, Paul, James, and Mary", n._names(["Peter", "Paul", "James", "Mary"], to_user=self.poptibo, name_fn=name_mock))
+    self.assertEqual("Peter, Paul, and Mary", n._names(["Peter", "Paul", "Mary"], to_user=USER2, name_fn=name_mock))
+    self.assertEqual("Peter, Paul, James, and Mary", n._names(["Peter", "Paul", "James", "Mary"], to_user=USER2, name_fn=name_mock))
 
       
 class SecondsLeftTest(unittest.TestCase):

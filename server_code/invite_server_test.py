@@ -3,6 +3,7 @@ import anvil.secrets as secrets
 import anvil.tables
 from anvil.tables import app_tables, order_by
 import anvil.tables.query as q
+from .server_auto_test import ADMIN, USER2
 from empathy_chat import invites
 from empathy_chat import invites_server
 from empathy_chat import parameters as p
@@ -11,10 +12,6 @@ from empathy_chat import server_misc as sm
 from empathy_chat.exceptions import MistakenGuessError
 from anvil_extras.server_utils import timed
 import unittest
-
-
-ADMIN = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
-USER2 = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
 
 
 class InviteBasicTest(unittest.TestCase):
