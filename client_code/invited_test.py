@@ -2,7 +2,7 @@ import unittest
 from .test_helper import MockServer, DispatchCollector, MockNotification
 from empathy_chat import parameters as p
 from empathy_chat import invites
-from empathy_chat import invited
+from empathy_chat import invited_procedures as invited
 from empathy_chat.glob import publisher
 
 
