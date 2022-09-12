@@ -123,6 +123,7 @@ class InviteTest(unittest.TestCase):
     anvil.users.force_login(self.poptibo)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
+    self.assertEqual(invite.link_key, self.s_invite1.link_key)
 
   def test_new_visit(self):
     self.add_link_invite()
