@@ -13,6 +13,10 @@ from anvil_extras.server_utils import timed
 import unittest
 
 
+ADMIN = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
+USER2 = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
+
+
 class InviteBasicTest(unittest.TestCase):
   def test_conversion(self):
     invite1 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess="6666")
@@ -25,9 +29,7 @@ class InviteBasicTest(unittest.TestCase):
 class InviteTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
-    self.user = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
-    self.poptibo = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
-    anvil.users.force_login(self.user)
+    anvil.users.force_login(ADMIN)
 
   def test_invalid_add(self):
     invite1 = invites.Invite(inviter_guess="6666")
@@ -48,12 +50,12 @@ class InviteTest(unittest.TestCase):
     self.assertFalse(self.s_invite1.inviter)
     
   def add_connect_invite(self):
-    port_invitee = sm.get_port_user(self.poptibo, user1=self.user)
+    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
     self.invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess="5555", invitee=port_invitee)
     self.s_invite2 = invites_server.Invite(self.invite2)
     errors = self.s_invite2.add()
     self.assertFalse(errors)
-    self.assertEqual(self.s_invite2.inviter, self.user)
+    self.assertEqual(self.s_invite2.inviter, ADMIN)
     self.invite2 = self.s_invite2.portable()    
  
   def cancel_connect_invite(self): 
@@ -62,7 +64,7 @@ class InviteTest(unittest.TestCase):
 
   def test_new_link(self):
     self.add_link_invite()
-    self.assertEqual(self.invite1.inviter.user_id, self.user.get_id())
+    self.assertEqual(self.invite1.inviter.user_id, ADMIN.get_id())
     self.assertTrue(self.invite1.link_key)
     self.cancel_link_invite()
 
@@ -71,11 +73,11 @@ class InviteTest(unittest.TestCase):
 
   def test_new_connect1(self):
     self.add_connect_invite()
-    self.assertEqual(self.invite2.inviter.user_id, self.user.get_id())
+    self.assertEqual(self.invite2.inviter.user_id, ADMIN.get_id())
     self.assertFalse(self.invite2.link_key)
     self.assertTrue(self.invite2.invitee)
     #test_new_connect_dup
-    port_invitee = sm.get_port_user(self.poptibo, user1=self.user)
+    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
     invite2dup = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="5555", invitee=port_invitee)
     s_invite2dup = invites_server.Invite(invite2dup)
     errors = s_invite2dup.add()
@@ -83,14 +85,14 @@ class InviteTest(unittest.TestCase):
     self.cancel_connect_invite()   
     
   def test_new_connect_failed_guess(self):
-    port_invitee = sm.get_port_user(self.poptibo, user1=self.user)
+    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
     invite2 = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="6666", invitee=port_invitee)
     s_invite2 = invites_server.Invite(invite2)
     errors = s_invite2.add()
     self.assertTrue(errors)
-    test_prompts = app_tables.prompts.search(user=self.user, 
-                                             spec={'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
-    #print({'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
+    test_prompts = app_tables.prompts.search(user=ADMIN, 
+                                             spec={'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
+    #print({'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
     self.assertEqual(len(test_prompts), 0)
     for test_prompt in test_prompts:
       test_prompt.delete()
@@ -99,15 +101,15 @@ class InviteTest(unittest.TestCase):
   def test_logged_in_visit_mistaken_inviter_guess(self):
     self.add_link_invite()
     # invite2a = invites.Invite(link_key=self.invite1.link_key)
-    # errors = invite2a.relay('visit', {'user': self.poptibo})
-    anvil.users.force_login(self.poptibo)
+    # errors = invite2a.relay('visit', {'user': USER2})
+    anvil.users.force_login(USER2)
     with self.assertRaises(MistakenGuessError) as context:
       invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     # self.assertTrue(errors)
     # self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)  
     self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
-    test_prompts = app_tables.prompts.search(user=self.user, 
-                                             spec={'name': 'invite_guess_fail', 'to_id': self.poptibo.get_id()})
+    test_prompts = app_tables.prompts.search(user=ADMIN, 
+                                             spec={'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
     self.assertEqual(len(test_prompts), 1)
     for test_prompt in test_prompts:
       test_prompt.delete()
@@ -115,12 +117,12 @@ class InviteTest(unittest.TestCase):
 
   def test_logged_in_visit_correct_inviter_guess(self):
     self.add_link_invite()
-    self.s_invite1.inviter_guess = self.poptibo['phone'][-4:]
+    self.s_invite1.inviter_guess = USER2['phone'][-4:]
     self.s_invite1.edit_invite()
     # invite2b = invites.Invite(link_key=self.s_invite1.link_key)
     # s_invite2b = invites_server.Invite(invite2b)
-    # errors = s_invite2b.visit(**{'user': self.poptibo})
-    anvil.users.force_login(self.poptibo)
+    # errors = s_invite2b.visit(**{'user': USER2})
+    anvil.users.force_login(USER2)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
     self.assertEqual(invite.link_key, self.s_invite1.link_key)
@@ -157,14 +159,14 @@ class InviteTest(unittest.TestCase):
 #     errors = self.invite2.relay('respond')
     self.s_invite2['invitee_guess'] = "6688"
     self.s_invite2['rel_to_invitee'] = "tester 3"
-    self.assertEqual(self.s_invite2.inviter, self.user)
-    errors = self.s_invite2.relay('respond', {'user_id': self.poptibo.get_id()})
+    self.assertEqual(self.s_invite2.inviter, ADMIN)
+    errors = self.s_invite2.relay('respond', {'user_id': USER2.get_id()})
     self.assertFalse(errors)
-    self.assertEqual(c.distance(self.user, self.poptibo, up_to_distance=1), 1)
-    c.disconnect(self.poptibo.get_id())
+    self.assertEqual(c.distance(ADMIN, USER2, up_to_distance=1), 1)
+    c.disconnect(USER2.get_id())
 
   def tearDown(self):
-    test_invites = app_tables.invites.search(user1=q.any_of(self.user, self.poptibo), date=q.greater_than_or_equal_to(self.start_time))
+    test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
     anvil.users.logout()
