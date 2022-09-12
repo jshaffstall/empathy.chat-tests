@@ -153,8 +153,10 @@ class InviteTest(unittest.TestCase):
     self.s_invite2['invitee_guess'] = "6688"
     self.s_invite2['rel_to_invitee'] = "tester 3"
     self.assertEqual(self.s_invite2.inviter, ADMIN)
-    errors = self.s_invite2.relay('respond', {'user_id': USER2.get_id()})
-    self.assertFalse(errors)
+    # errors = self.s_invite2.relay('respond', {'user_id': USER2.get_id()})
+    # self.assertFalse(errors)
+    anvil.users.force_login(USER2)
+    invites_server.respond_to_close_invite(self.s_invite2.portable())
     self.assertEqual(c.distance(ADMIN, USER2, up_to_distance=1), 1)
     c.disconnect(USER2.get_id())
 
