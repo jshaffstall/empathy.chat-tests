@@ -9,7 +9,7 @@ from empathy_chat import invites_server
 from empathy_chat import parameters as p
 from empathy_chat import connections as c
 from empathy_chat import server_misc as sm
-from empathy_chat.exceptions import MistakenGuessError, InvalidInviteError
+from empathy_chat.exceptions import MistakenGuessError, InvalidInviteError, MistakenVisitError
 from anvil_extras.server_utils import timed
 import unittest
 
@@ -97,13 +97,9 @@ class InviteTest(unittest.TestCase):
   @timed
   def test_logged_in_visit_mistaken_inviter_guess(self):
     self.add_link_invite()
-    # invite2a = invites.Invite(link_key=self.invite1.link_key)
-    # errors = invite2a.relay('visit', {'user': USER2})
     anvil.users.force_login(USER2)
     with self.assertRaises(MistakenGuessError) as context:
       invite = invites_server.load_from_link_key(self.s_invite1.link_key)
-    # self.assertTrue(errors)
-    # self.assertEqual(errors[0], p.MISTAKEN_INVITER_GUESS_ERROR)  
     self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
     test_prompts = app_tables.prompts.search(user=ADMIN, 
                                              spec={'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
@@ -115,9 +111,6 @@ class InviteTest(unittest.TestCase):
     self.add_link_invite()
     self.s_invite1.inviter_guess = USER2['phone'][-4:]
     self.s_invite1.edit_invite()
-    # invite2b = invites.Invite(link_key=self.s_invite1.link_key)
-    # s_invite2b = invites_server.Invite(invite2b)
-    # errors = s_invite2b.visit(**{'user': USER2})
     anvil.users.force_login(USER2)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
@@ -130,12 +123,19 @@ class InviteTest(unittest.TestCase):
     self.assertFalse(invite2c.invitee)
     self.assertTrue(invite2c.invite_id)
 
+  def test_own_link_visit(self):
+    self.add_link_invite()
+    with self.assertRaises(MistakenVisitError) as context:
+      invite2c = invites_server.load_from_link_key(self.s_invite1.link_key)
+    self.assertTrue("your own invite link" in str(context.exception))
+  
   def test_old_visit(self):
     self.add_link_invite()
+    link_key = self.s_invite1.link_key
     self.cancel_link_invite()
     anvil.users.logout()
     with self.assertRaises(InvalidInviteError) as context:
-      invite2c = invites_server.load_from_link_key(self.s_invite1.link_key)
+      invite2c = invites_server.load_from_link_key(link_key)
     self.assertTrue("This invite link is no longer active." in str(context.exception))
 
   def test_invalid_visit(self):
