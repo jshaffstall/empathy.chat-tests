@@ -12,7 +12,7 @@ from empathy_chat import server_misc as sm
 from empathy_chat.exceptions import MistakenGuessError, InvalidInviteError, MistakenVisitError
 from anvil_extras.server_utils import timed
 import unittest
-
+    
 
 class InviteBasicTest(unittest.TestCase):
   def test_conversion(self):
@@ -21,8 +21,15 @@ class InviteBasicTest(unittest.TestCase):
     self.assertEqual(s_invite1.inviter_guess, "6666")
     invite2 = s_invite1.portable()
     self.assertEqual(invite2.rel_to_inviter, 'test subject 1')
-    
-    
+
+
+class InvitedFasterTests(unittest.TestCase):
+  def test_invalid_visit(self):
+    with self.assertRaises(InvalidInviteError) as context:
+      invite2c = invites_server.load_from_link_key("invalid_link_key")
+    self.assertTrue("Invalid invite link" in str(context.exception))
+
+
 class InviteTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
@@ -46,14 +53,13 @@ class InviteTest(unittest.TestCase):
     self.s_invite1.cancel()
     self.assertFalse(self.s_invite1.inviter)
     
-  def add_connect_invite(self):
-    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
-    self.invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess="5555", invitee=port_invitee)
-    self.s_invite2 = invites_server.Invite(self.invite2)
+  def add_connect_invite(self, inviter_guess="5555"):
+    invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
+    self.s_invite2 = invites_server.Invite(invite2)
+    self.s_invite2.invitee = USER2
     errors = self.s_invite2.add()
     self.assertFalse(errors)
     self.assertEqual(self.s_invite2.inviter, ADMIN)
-    self.invite2 = self.s_invite2.portable()    
  
   def cancel_connect_invite(self): 
     self.s_invite2.cancel()
@@ -70,21 +76,20 @@ class InviteTest(unittest.TestCase):
 
   def test_new_connect1(self):
     self.add_connect_invite()
-    self.assertEqual(self.invite2.inviter.user_id, ADMIN.get_id())
-    self.assertFalse(self.invite2.link_key)
-    self.assertTrue(self.invite2.invitee)
+    self.assertFalse(self.s_invite2.link_key)
+    self.assertTrue(self.s_invite2.invitee)
     #test_new_connect_dup
-    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
-    invite2dup = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="5555", invitee=port_invitee)
+    invite2dup = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="5555")
     s_invite2dup = invites_server.Invite(invite2dup)
+    s_invite2dup.invitee = USER2
     errors = s_invite2dup.add()
     self.assertTrue(errors)
     self.cancel_connect_invite()   
     
   def test_new_connect_failed_guess(self):
-    port_invitee = sm.get_port_user(USER2, user1=ADMIN)
-    invite2 = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="6666", invitee=port_invitee)
+    invite2 = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="6666")
     s_invite2 = invites_server.Invite(invite2)
+    s_invite2.invitee = USER2
     errors = s_invite2.add()
     self.assertTrue(errors)
     test_prompts = app_tables.prompts.search(user=ADMIN, 
@@ -137,29 +142,52 @@ class InviteTest(unittest.TestCase):
     with self.assertRaises(InvalidInviteError) as context:
       invite2c = invites_server.load_from_link_key(link_key)
     self.assertTrue("This invite link is no longer active." in str(context.exception))
-
-  def test_invalid_visit(self):
-    anvil.users.logout()
-    with self.assertRaises(InvalidInviteError) as context:
-      invite2c = invites_server.load_from_link_key("invalid_link_key")
-    self.assertTrue("Invalid invite link" in str(context.exception))
   
   @timed
-  def test_connect_response(self):
+  def test_logged_in_connect_response_success(self):
     self.add_connect_invite()
-#     self.invite2['invitee_guess'] = "6688"
-#     self.invite2['rel_to_invitee'] = "tester 3"
-#     errors = self.invite2.relay('respond')
     self.s_invite2['invitee_guess'] = "6688"
     self.s_invite2['rel_to_invitee'] = "tester 3"
     self.assertEqual(self.s_invite2.inviter, ADMIN)
-    # errors = self.s_invite2.relay('respond', {'user_id': USER2.get_id()})
-    # self.assertFalse(errors)
     anvil.users.force_login(USER2)
     invites_server.respond_to_close_invite(self.s_invite2.portable())
     self.assertEqual(c.distance(ADMIN, USER2, up_to_distance=1), 1)
+    anvil.users.force_login(ADMIN)
     c.disconnect(USER2.get_id())
 
+  def test_logged_in_connect_response_failed_guess(self):
+    self.add_connect_invite()
+    self.s_invite2['invitee_guess'] = "5678"
+    self.s_invite2['rel_to_invitee'] = "tester 3"
+    self.assertEqual(self.s_invite2.inviter, ADMIN)
+    anvil.users.force_login(USER2)
+    with self.assertRaises(MistakenGuessError) as context:
+      invites_server.respond_to_close_invite(self.s_invite2.portable())
+    self.assertTrue("did not accurately provide the last 4 digits" in str(context.exception))
+
+  def test_logged_in_connect_response_failed_guess(self):
+    self.add_connect_invite()
+    self.s_invite2['invitee_guess'] = "5678"
+    self.s_invite2['rel_to_invitee'] = "tester 3"
+    self.assertEqual(self.s_invite2.inviter, ADMIN)
+    anvil.users.force_login(USER2)
+    with self.assertRaises(MistakenGuessError) as context:
+      invites_server.respond_to_close_invite(self.s_invite2.portable())
+    self.assertTrue("ou did not accurately provide the last 4 digits" in str(context.exception))
+
+  # def test_logged_in_connect_response_failed_inviter_guess(self):
+  #   self.add_connect_invite()
+  #   self.s_invite2['invitee_guess'] = "5678"
+  #   self.s_invite2['rel_to_invitee'] = "tester 3"
+  #   self.assertEqual(self.s_invite2.inviter, ADMIN)
+  #   anvil.users.force_login(USER2)
+  #   phone_holder = str(USER2['phone'])
+  #   USER2['phone'] = "1234"
+  #   with self.assertRaises(MistakenGuessError) as context:
+  #     invites_server.respond_to_close_invite(self.s_invite2.portable())
+  #   self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
+  #   USER2['phone'] = phone_holder
+  
   def tearDown(self):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
