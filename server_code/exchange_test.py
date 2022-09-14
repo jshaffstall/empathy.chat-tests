@@ -1,5 +1,5 @@
 import unittest
-from .server_auto_test import ADMIN, USER2
+from .misc_server_test import ADMIN, USER2
 from empathy_chat.exchanges import Exchange, Format
 from empathy_chat import exchange_interactor as ei
 from empathy_chat.exceptions import RowMissingError

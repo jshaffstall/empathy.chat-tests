@@ -3,7 +3,7 @@ import anvil.secrets as secrets
 import anvil.tables
 from anvil.tables import app_tables, order_by
 import anvil.tables.query as q
-from .server_auto_test import ADMIN, USER2
+from .misc_server_test import ADMIN, USER2
 from empathy_chat import invites
 from empathy_chat import invites_server
 from empathy_chat import parameters as p
@@ -33,7 +33,6 @@ class InvitedFasterTests(unittest.TestCase):
 class InviteLinkTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
-    anvil.users.force_login(ADMIN)
 
   def test_invalid_add(self):
     invite1 = invites.Invite(inviter_guess="6666")
@@ -123,13 +122,13 @@ class InviteLinkTest(unittest.TestCase):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
-    anvil.users.logout()
+    if anvil.users.get_user() != ADMIN:
+      anvil.users.force_login(ADMIN)
 
 
 class InviteConnectTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
-    anvil.users.force_login(ADMIN)
 
   def add_connect_invite(self, inviter_guess="5555"):
     invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
@@ -197,6 +196,7 @@ class InviteConnectTest(unittest.TestCase):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
-    anvil.users.logout()
+    if anvil.users.get_user() != ADMIN:
+      anvil.users.force_login(ADMIN)
     USER2['phone'] = "+12625555555"
     
