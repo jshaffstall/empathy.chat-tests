@@ -32,10 +32,12 @@ def client_auto_tests():
 def client_slow_tests():
   from anvil_extras.utils import timed
   from . import invited_test as it
+  from . import portable_test as pt
   
   @timed
   def tests_run_client_side():
     it.InvitedSlowTest().main()
+    pt.PortUserTest().main()
   tests_run_client_side()
 
 

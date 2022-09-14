@@ -9,7 +9,7 @@ def server_auto_tests(verbosity=1):
   import sys
   test_modules = ['helper_test', 'invite_test', 'relationship_test', 
                   'exchange_controller_test', 'network_controller_test',
-                  'invite_fast_server_test',
+                  'invite_fast_server_test', 'server_auto_test', 
                  ]
   test = unittest.TestLoader().loadTestsFromNames(test_modules)
   unittest.TextTestRunner(stream=sys.stdout, verbosity=verbosity).run(test)
