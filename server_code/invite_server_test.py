@@ -40,8 +40,8 @@ class InviteLinkTest(unittest.TestCase):
     errors = s_invite1.add()
     self.assertTrue(errors)
 
-  def add_link_invite(self):
-    self.invite1 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess="6666")
+  def add_link_invite(self, inviter_guess="6666"):
+    self.invite1 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
     self.s_invite1 = invites_server.Invite(self.invite1)
     #self.invite1.relay('add')
     errors = self.s_invite1.add()
@@ -73,15 +73,15 @@ class InviteLinkTest(unittest.TestCase):
     self.assertEqual(len(test_prompts), 1)
     for test_prompt in test_prompts:
       test_prompt.delete()
+    anvil.users.force_login(ADMIN)
     
   def test_logged_in_visit_correct_inviter_guess(self):
-    self.add_link_invite()
-    self.s_invite1.inviter_guess = USER2['phone'][-4:]
-    self.s_invite1.edit_invite()
+    self.add_link_invite(inviter_guess=USER2['phone'][-4:])
     anvil.users.force_login(USER2)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
     self.assertEqual(invite.link_key, self.s_invite1.link_key)
+    anvil.users.force_login(ADMIN)
 
   def test_new_visit(self):
     self.add_link_invite()
@@ -89,6 +89,7 @@ class InviteLinkTest(unittest.TestCase):
     invite2c = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertFalse(invite2c.invitee)
     self.assertTrue(invite2c.invite_id)
+    anvil.users.force_login(ADMIN)
 
   def test_own_link_visit(self):
     self.add_link_invite()
@@ -104,6 +105,7 @@ class InviteLinkTest(unittest.TestCase):
     with self.assertRaises(InvalidInviteError) as context:
       invite2c = invites_server.load_from_link_key(link_key)
     self.assertTrue("This invite link is no longer active." in str(context.exception))
+    anvil.users.force_login(ADMIN)
     
   def test_new_connect_failed_guess(self):
     invite2 = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="6666")
@@ -122,8 +124,6 @@ class InviteLinkTest(unittest.TestCase):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
-    if anvil.users.get_user() != ADMIN:
-      anvil.users.force_login(ADMIN)
 
 
 class InviteConnectTest(unittest.TestCase):
@@ -175,6 +175,7 @@ class InviteConnectTest(unittest.TestCase):
     with self.assertRaises(MistakenGuessError) as context:
       invites_server.respond_to_close_invite(self.s_invite2.portable())
     self.assertTrue("did not accurately provide the last 4 digits" in str(context.exception))
+    anvil.users.force_login(ADMIN)
 
   def test_logged_in_connect_response_failed_inviter_guess(self):
     self.add_connect_invite()
@@ -191,12 +192,11 @@ class InviteConnectTest(unittest.TestCase):
     self.assertEqual(len(test_prompts), 1)
     for test_prompt in test_prompts:
       test_prompt.delete()
+    anvil.users.force_login(ADMIN)
 
   def tearDown(self):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
-    if anvil.users.get_user() != ADMIN:
-      anvil.users.force_login(ADMIN)
     USER2['phone'] = "+12625555555"
     
