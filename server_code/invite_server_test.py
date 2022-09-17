@@ -12,15 +12,6 @@ from empathy_chat import server_misc as sm
 from empathy_chat.exceptions import MistakenGuessError, InvalidInviteError, MistakenVisitError
 from anvil_extras.server_utils import timed
 import unittest
-    
-
-class InviteBasicTest(unittest.TestCase):
-  def test_conversion(self):
-    invite1 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess="6666")
-    s_invite1 = invites_server.Invite(invite1)
-    self.assertEqual(s_invite1.inviter_guess, "6666")
-    invite2 = s_invite1.portable()
-    self.assertEqual(invite2.rel_to_inviter, 'test subject 1')
 
 
 class InvitedFasterTests(unittest.TestCase):
@@ -28,7 +19,7 @@ class InvitedFasterTests(unittest.TestCase):
     with self.assertRaises(InvalidInviteError) as context:
       invite2c = invites_server.load_from_link_key("invalid_link_key")
     self.assertTrue("Invalid invite link" in str(context.exception))
-
+    
 
 class InviteLinkTest(unittest.TestCase):
   def setUp(self):
@@ -89,6 +80,7 @@ class InviteLinkTest(unittest.TestCase):
     invite2c = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertFalse(invite2c.invitee)
     self.assertTrue(invite2c.invite_id)
+    self.assertFalse(self.s_invite1.authorizes_signup())
     anvil.users.force_login(ADMIN)
 
   def test_own_link_visit(self):
@@ -146,6 +138,7 @@ class InviteConnectTest(unittest.TestCase):
     self.add_connect_invite()
     self.assertFalse(self.s_invite2.link_key)
     self.assertTrue(self.s_invite2.invitee)
+    self.assertFalse(self.s_invite2.authorizes_signup())
     #test_new_connect_dup
     invite2dup = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="5555")
     s_invite2dup = invites_server.Invite(invite2dup)
