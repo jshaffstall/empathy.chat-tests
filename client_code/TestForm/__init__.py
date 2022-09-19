@@ -5,6 +5,8 @@ import anvil.users
 from empathy_chat.MenuForm.DashForm.CreateForm import CreateForm
 from empathy_chat import portable as t
 from empathy_chat import glob
+from empathy_chat import invites
+from empathy_chat import ui_procedures as ui
 from .. import auto_test
 from ..test_helper import UserLoggedIn
 
@@ -75,3 +77,15 @@ class TestForm(TestFormTemplate):
   def slow_client_button_click(self, **event_args):
     """This method is called when the button is clicked"""
     auto_test.client_slow_tests()
+
+  def invite_button_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    user_id = self.test_requestuser_drop_down.selected_value
+    with UserLoggedIn(user_id):
+      invite = invites.Invite(
+        inviter=t.User.from_logged_in(),
+        rel_to_inviter='test subject 1', 
+        inviter_guess='5555',
+      )
+      invite.relay('add')
+      ui.copy_to_clipboard(invite.url, desc="The invite link")
