@@ -28,15 +28,14 @@ class InviteLinkTest(unittest.TestCase):
   def test_invalid_add(self):
     invite1 = invites.Invite(inviter_guess="6666")
     s_invite1 = invites_server.Invite(invite1)
-    errors = s_invite1.add()
-    self.assertTrue(errors)
+    with self.assertRaises(InvalidInviteError) as context:
+      s_invite1.add()
 
   def add_link_invite(self, inviter_guess="6666"):
     self.invite1 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
     self.s_invite1 = invites_server.Invite(self.invite1)
     #self.invite1.relay('add')
-    errors = self.s_invite1.add()
-    self.assertFalse(errors)
+    self.s_invite1.add()
     self.invite1 = self.s_invite1.portable()
 
   def cancel_link_invite(self): 
@@ -107,8 +106,8 @@ class InviteLinkTest(unittest.TestCase):
     invite2 = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="6666")
     s_invite2 = invites_server.Invite(invite2)
     s_invite2.invitee = USER2
-    errors = s_invite2.add()
-    self.assertTrue(errors)
+    with self.assertRaises(MistakenGuessError) as context:
+      s_invite2.add()
     test_prompts = app_tables.prompts.search(user=ADMIN, 
                                              spec={'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
     #print({'name': 'invite_guess_fail', 'to_id': USER2.get_id()})
@@ -131,8 +130,7 @@ class InviteConnectTest(unittest.TestCase):
     invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
     self.s_invite2 = invites_server.Invite(invite2)
     self.s_invite2.invitee = USER2
-    errors = self.s_invite2.add()
-    self.assertFalse(errors)
+    self.s_invite2.add()
     self.assertEqual(self.s_invite2.inviter, ADMIN)
  
   def cancel_connect_invite(self): 
@@ -148,8 +146,8 @@ class InviteConnectTest(unittest.TestCase):
     invite2dup = invites.Invite(rel_to_inviter='test subject 1 dup', inviter_guess="5555")
     s_invite2dup = invites_server.Invite(invite2dup)
     s_invite2dup.invitee = USER2
-    errors = s_invite2dup.add()
-    self.assertTrue(errors)
+    with self.assertRaises(InvalidInviteError) as context:
+      s_invite2dup.add()
     self.cancel_connect_invite()   
   
   @timed
