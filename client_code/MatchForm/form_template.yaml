@@ -1,0 +1,48 @@
+container:
+  type: HtmlTemplate
+  properties: {tooltip: '', background: '', foreground: '', border: '', visible: true,
+    role: null, html: "<script>\n function loadClips(doorbellMp3SrcUrl, doorbellWavSrcUrl,\
+      \ dingWavSrcUrl){\n    var doorbellMp3=document.getElementById('doorbellMp3');\n\
+      \    var doorbellWav=document.getElementById('doorbellWav');\n    var dingWav=document.getElementById('dingWav');\n\
+      \    doorbellMp3.src=doorbellMp3SrcUrl;\n    doorbellWav.src=doorbellWavSrcUrl;\n\
+      \    dingWav.src=dingWavSrcUrl;\n    var doorbell=document.getElementById('doorbell');\n\
+      \    var ding=document.getElementById('ding');\n    doorbell.load()\n    ding.load()\n\
+      \    doorbell.volume=0.7\n    ding.volume=0.4\n    }\n</script>\n\n<script>\n\
+      function playSound(audio_id) {\n          var sound = document.getElementById(audio_id);\n\
+      \          sound.play();\n          raise(NotAllowedError)\n      }\n</script>\n\
+      \n<audio id=\"doorbell\" preload=\"auto\" autostart=\"false\">\n  <source id=\"\
+      doorbellMp3\" src=\"\" type=\"audio/mp3\" />\n  <source id=\"doorbellWav\" src=\"\
+      \" type=\"audio/wav\" />  \n</audio>\n\n<audio id=\"ding\" preload=\"auto\"\
+      \ autostart=\"false\">\n  <source id=\"dingWav\" src=\"\" type=\"audio/wav\"\
+      \ />  \n</audio>\n"}
+  event_bindings: {show: form_show}
+components:
+- type: ColumnPanel
+  properties: {col_widths: '{}'}
+  name: column_panel_1
+  layout_properties: {slot: default}
+  components:
+  - type: Button
+    properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+      foreground: '', visible: true, text: Play Doorbell, font_size: null, font: '',
+      spacing_above: small, icon_align: left, spacing_below: small, italic: false,
+      background: '', bold: false, underline: false, icon: ''}
+    name: doorbell_button
+    layout_properties: {slot: default, grid_position: 'IPEFHB,YLEVZG'}
+    event_bindings: {click: doorbell_button_click}
+  - type: Button
+    properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+      foreground: '', visible: true, text: Play Chime, font_size: null, font: '',
+      spacing_above: small, icon_align: left, spacing_below: small, italic: false,
+      background: '', bold: false, underline: false, icon: ''}
+    name: play_chime
+    layout_properties: {slot: default, grid_position: 'SYKFSP,QMMGVD'}
+    event_bindings: {click: play_chime_click}
+- type: form:WAF7GWYZ3PTOPDNF:MyTimer
+  properties: {minutes: 0, seconds: 1, paused: true, visible: true, enabled: true,
+    align: center}
+  name: my_timer_1
+  layout_properties: {slot: default}
+  event_bindings: {elapsed: my_timer_1_elapsed}
+is_package: true
+component: []

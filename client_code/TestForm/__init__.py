@@ -89,3 +89,8 @@ class TestForm(TestFormTemplate):
       )
       invite.relay('add')
       ui.copy_to_clipboard(invite.url, desc="The invite link")
+
+  def matchform_button_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    open_form('MatchForm')
+
