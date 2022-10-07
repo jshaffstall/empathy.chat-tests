@@ -20,9 +20,9 @@ class ExchangeControllerTest(unittest.TestCase):
     )
     self.assertEqual(
       state.messages_plus,
-      [dict(me=True, message=f"How Tim likes to receive empathy:\nmy how_empathy", label=f"[from Tim's profile]"),
-       dict(me=False, message=f"How Sam likes to receive empathy:\ntheir how_empathy", label=f"[from Sam's profile]"),
-       dict(me=True, message="my first", label="Tim"), 
+      #[dict(me=True, message=f"How Tim likes to receive empathy:\nmy how_empathy", label=f"[from Tim's profile]"),
+      # dict(me=False, message=f"How Sam likes to receive empathy:\ntheir how_empathy", label=f"[from Sam's profile]"),
+       [dict(me=True, message="my first", label="Tim"), 
        dict(me=False, message="their first", label="Sam"),
        dict(me=False, message="their second"),
        dict(me=True, message="my second"),
