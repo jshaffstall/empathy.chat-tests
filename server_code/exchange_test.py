@@ -27,7 +27,7 @@ class MockRepo:
   def __init__(self, db_exchange):
     self._db_exchange = db_exchange
   
-  def get_exchange(self, user_id):
+  def get_exchange(self, user_id, to_join=False):
     user_ids = [p['user_id'] for p in self._db_exchange.participants]
     if user_id in user_ids:
       return Exchange(self._db_exchange.exchange_id, self._db_exchange.room_code, self._db_exchange.participants, 
