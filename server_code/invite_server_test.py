@@ -65,7 +65,7 @@ class InviteLinkTest(unittest.TestCase):
       test_prompt.delete()
     
   def test_logged_in_visit_correct_inviter_guess(self):
-    self.add_link_invite(inviter_guess=USER2['phone'][-4:])
+    self.add_link_invite(inviter_guess=secrets.decrypt_with_key("new_key", USER2['phone'])[-4:])
     anvil.users.force_login(USER2)
     invite = invites_server.load_from_link_key(self.s_invite1.link_key)
     self.assertEqual(invite.rel_to_inviter, 'test subject 1')
@@ -125,6 +125,7 @@ class InviteLinkTest(unittest.TestCase):
 class InviteConnectTest(unittest.TestCase):
   def setUp(self):
     self.start_time = sm.now()
+    self.phone_store = USER2['phone']
 
   def add_connect_invite(self, inviter_guess="5555"):
     invite2 = invites.Invite(rel_to_inviter='test subject 1', inviter_guess=inviter_guess)
@@ -178,7 +179,7 @@ class InviteConnectTest(unittest.TestCase):
     self.s_invite2['rel_to_invitee'] = "tester 3"
     self.assertEqual(self.s_invite2.inviter, ADMIN)
     anvil.users.force_login(USER2)
-    USER2['phone'] = "1234"
+    USER2['phone'] = secrets.encrypt_with_key("new_key", "1234")
     with self.assertRaises(MistakenGuessError) as context:
       invites_server.respond_to_close_invite(self.s_invite2.portable())
     self.assertTrue(p.MISTAKEN_INVITER_GUESS_ERROR in str(context.exception))
@@ -193,5 +194,5 @@ class InviteConnectTest(unittest.TestCase):
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
     for test_invite in test_invites:
       test_invite.delete()
-    USER2['phone'] = "+12625555555"
+    USER2['phone'] = self.phone_store
     
