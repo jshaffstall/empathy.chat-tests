@@ -21,7 +21,6 @@ class MatchForm(MatchFormTemplate):
   def _play_sound(self, audio_id):
     try:
       self.call_js('playSound', audio_id)
-      #raise ExternalError
     except ExternalError as err:
       print(f"Error playing {audio_id} sound: {repr(err)}")       
 
@@ -35,7 +34,3 @@ class MatchForm(MatchFormTemplate):
 
   def my_timer_1_elapsed(self, **event_args):
     self._play_sound('ding')
-
-
-
-
