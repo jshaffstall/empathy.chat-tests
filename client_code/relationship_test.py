@@ -17,8 +17,7 @@ class TestRelationshipName(unittest.TestCase):
     self.assertTrue(Relationship(distance=1).last_name_visible)
     
   def test_last_name_visible_between_host_and_member(self):
-    self.assertTrue(Relationship(group_host=True).last_name_visible)
-    self.assertTrue(Relationship(my_group_member=True).last_name_visible)
+    self.assertTrue(Relationship(group_host_to_member=True).last_name_visible)
     
   def test_last_initial_visible_to_2nd(self):
     rel2 = Relationship(distance=2)
@@ -65,5 +64,4 @@ class TestRelationshipProfile(unittest.TestCase):
   def test_profile_url_visible_to_close_only(self):
     self.assertTrue(Relationship(distance=1).profile_url_visible)
     self.assertFalse(Relationship(distance=1.1).profile_url_visible)
-    self.assertFalse(Relationship(group_host=True).profile_url_visible)
-    self.assertFalse(Relationship(my_group_member=True).profile_url_visible)
+    self.assertFalse(Relationship(group_host_to_member=True).profile_url_visible)
