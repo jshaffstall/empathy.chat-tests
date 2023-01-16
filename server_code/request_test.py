@@ -12,7 +12,7 @@ class TestNewRequest(unittest.TestCase):
   def test_add_single_later_request(self):
     port_prop = Proposal()
     request = ri._new_request(poptibo_id, port_prop)
-    self.assertEqual(request.id, port_prop.times[0].proptime_id)
+    self.assertEqual(request.id, port_prop.times[0].time_id)
     self.assertEqual(request.or_group_id, port_prop.prop_id)
     self.assertEqual(request.eformat.duration, port_prop.times[0].duration)
     self.assertEqual(request.expire_dt, port_prop.times[0].expire_date)
