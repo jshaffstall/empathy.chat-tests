@@ -13,7 +13,7 @@ poptibo_id = USER2.get_id()
 
 class TestNewRequest(unittest.TestCase):
   def test_new_single_later_request(self):
-    u = sm.get_port_user(USER2, distance=1, simple=True)
+    u = sm.get_port_user(USER2, distance=0, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                          times=[ProposalTime(start_date=5, duration=15, expire_date=20)])
@@ -85,7 +85,7 @@ class TestAddRequest(unittest.TestCase):
 #   def test_save_request(self):
 #     u = sm.get_port_user(USER2, distance=1, simple=True)
 #     port_prop = Proposal(user=u, min_size=3, max_size=10, 
-#                          eligible=2, eligible_users=[ADMIN], eligible_groups=[], eligible_starred=True,
+#                          eligible=2, eligible_users=[sm.get_port_user(ADMIN, distance=1, simple=True)], eligible_groups=[], eligible_starred=True,
 #                          times=[ProposalTime(start_date=datetime.now(), duration=15, expire_date=datetime.now())])
 #     request = next(ri._new_requests(USER2, port_prop))
 #     request_record = rg.RequestRecord(request)
