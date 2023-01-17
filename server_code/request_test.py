@@ -10,15 +10,17 @@ poptibo_id = USER2.get_id()
 
 
 class TestNewRequest(unittest.TestCase):
-  def test_add_single_later_request(self):
+  def test_new_single_later_request(self):
     u = sm.get_port_user(USER2, distance=1, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                          times=[ProposalTime(start_date=5, duration=15, expire_date=20)])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
     request = requests[0]
-    self.assertEqual(request.request_id, port_prop.times[0].time_id)
-    self.assertEqual(request.or_group_id, port_prop.prop_id)
+    # self.assertEqual(request.request_id, port_prop.times[0].time_id)
+    # self.assertEqual(request.or_group_id, port_prop.prop_id)
+    self.assertFalse(request.request_id)
+    self.assertTrue(request.or_group_id)
     self.assertEqual(request.eformat.duration, port_prop.times[0].duration)
     self.assertEqual(request.expire_dt, port_prop.times[0].expire_date)
     self.assertEqual(request.user, port_prop.user)
@@ -30,8 +32,9 @@ class TestNewRequest(unittest.TestCase):
     self.assertEqual(request.eligible_users, port_prop.eligible_users)
     self.assertEqual(request.eligible_groups, port_prop.eligible_groups)
     self.assertEqual(request.eligible_starred, port_prop.eligible_starred)
+    self.assertEqual(request.current, True)
     
-  def test_add_multiple_later_request(self):
+  def test_new_multiple_later_requests(self):
     u = sm.get_port_user(USER2, distance=1, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
@@ -39,8 +42,10 @@ class TestNewRequest(unittest.TestCase):
                                 ProposalTime(start_date=1, duration=15, expire_date=20)])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
     for i, request in enumerate(requests):
-      self.assertEqual(request.request_id, port_prop.times[i].time_id)
-      self.assertEqual(request.or_group_id, port_prop.prop_id)
+      # self.assertEqual(request.request_id, port_prop.times[i].time_id)
+      # self.assertEqual(request.or_group_id, port_prop.prop_id)
+      self.assertFalse(request.request_id)
+      self.assertTrue(request.or_group_id)
       self.assertEqual(request.eformat.duration, port_prop.times[i].duration)
       self.assertEqual(request.expire_dt, port_prop.times[i].expire_date)
       self.assertEqual(request.user, port_prop.user)
@@ -55,19 +60,20 @@ class TestNewRequest(unittest.TestCase):
       self.assertEqual(request.current, True)    
 
 
-def _mock_save_requests(requests):
-  for r in requests:
-    r.or_group_id = 11
+# def _mock_save_requests(requests):
+#   for r in requests:
+#     r.or_group_id = 11
 
 class TestAddRequest(unittest.TestCase):
   def setUp(self):
     ri.repo = Mock()
-    ri.repo.save_requests = _mock_save_requests
+    # ri.repo.save_requests = _mock_save_requests
   
   def test_return_prop_id(self):
     port_prop = Proposal()
     prop_id = ri._add_request(USER2, port_prop)
-    self.assertTrue(prop_id, 11)
+    self.assertTrue(prop_id)
+    ri.repo.RequestRecord.assert_called_once()
 
   def tearDown(self):
     ri.reset_repo()
