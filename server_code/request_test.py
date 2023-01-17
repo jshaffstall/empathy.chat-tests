@@ -51,7 +51,8 @@ class TestNewRequest(unittest.TestCase):
       self.assertEqual(request.eligible, port_prop.eligible)
       self.assertEqual(request.eligible_users, port_prop.eligible_users)
       self.assertEqual(request.eligible_groups, port_prop.eligible_groups)
-      self.assertEqual(request.eligible_starred, port_prop.eligible_starred)    
+      self.assertEqual(request.eligible_starred, port_prop.eligible_starred)
+      self.assertEqual(request.current, True)    
 
 
 def _mock_save_requests(requests):
