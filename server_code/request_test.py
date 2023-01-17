@@ -1,7 +1,9 @@
 import unittest
 from unittest.mock import Mock
+from datetime import datetime
 from .misc_server_test import ADMIN, USER2
 from empathy_chat import request_interactor as ri
+from empathy_chat import request_gateway as rg
 from empathy_chat.portable import Proposal, ProposalTime
 from empathy_chat import server_misc as sm
 
@@ -77,3 +79,17 @@ class TestAddRequest(unittest.TestCase):
 
   def tearDown(self):
     ri.reset_repo()
+
+
+class TestRequestRecord(unittest.TestCase):
+  def test_save_request(self):
+    u = sm.get_port_user(USER2, distance=1, simple=True)
+    port_prop = Proposal(user=u, min_size=3, max_size=10, 
+                         eligible=2, eligible_users=[ADMIN], eligible_groups=[], eligible_starred=True,
+                         times=[ProposalTime(start_date=datetime.now(), duration=15, expire_date=datetime.now())])
+    request = next(ri._new_requests(USER2, port_prop))
+    request_record = rg.RequestRecord(request)
+    self.assertFalse(request_record.record_id)
+    request_record.save()
+    self.assertTrue(request_record.record_id)
+    
