@@ -77,7 +77,7 @@ class TestNewRequest(unittest.TestCase):
                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                         times=[ProposalTime()])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
-    self.assertTrue(rs.have_no_conflicts(requests))
+    self.assertFalse(rs.have_conflicts(requests))
 
   def test_new_single_later_request_conflict(self):
     u = sm.get_port_user(USER2, distance=0, simple=True)
@@ -86,7 +86,7 @@ class TestNewRequest(unittest.TestCase):
                         times=[ProposalTime()])
     requests = list(ri._new_requests(poptibo_id, port_prop))
     requests.extend(ri._new_requests(poptibo_id, port_prop))
-    self.assertFalse(rs.have_no_conflicts(requests))
+    self.assertTrue(rs.have_conflicts(requests))
       
 # def _mock_save_requests(requests):
 #   for r in requests:
@@ -96,6 +96,7 @@ class TestAddRequest(unittest.TestCase):
   def setUp(self):
     ri.repo = Mock()
     # ri.repo.save_requests = _mock_save_requests
+    ri.repo.requests_by_user = lambda u: []
   
   def test_return_prop_id(self):
     port_prop = Proposal()
