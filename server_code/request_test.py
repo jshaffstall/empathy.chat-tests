@@ -71,22 +71,22 @@ class TestNewRequest(unittest.TestCase):
       self.assertEqual(request.eligible_starred, port_prop.eligible_starred)
       self.assertEqual(request.current, True)
 
-  def test_new_single_later_request_only_no_overlap(self):
+  def test_new_single_later_request_only_no_conflicts(self):
     u = sm.get_port_user(USER2, distance=0, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                         times=[ProposalTime()])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
-    self.assertTrue(rs.have_no_overlap(requests))
+    self.assertTrue(rs.have_no_conflicts(requests))
 
-  def test_new_single_later_request_overlap(self):
+  def test_new_single_later_request_conflict(self):
     u = sm.get_port_user(USER2, distance=0, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                         times=[ProposalTime()])
     requests = list(ri._new_requests(poptibo_id, port_prop))
     requests.extend(ri._new_requests(poptibo_id, port_prop))
-    self.assertFalse(rs.have_no_overlap(requests))
+    self.assertFalse(rs.have_no_conflicts(requests))
       
 # def _mock_save_requests(requests):
 #   for r in requests:
