@@ -5,6 +5,7 @@ from .misc_server_test import ADMIN, USER2
 from empathy_chat import request_interactor as ri
 from empathy_chat import request_gateway as rg
 from empathy_chat.portable import Proposal, ProposalTime
+import empathy_chat.portable as port
 from empathy_chat import server_misc as sm
 
 
@@ -16,7 +17,7 @@ class TestNewRequest(unittest.TestCase):
     u = sm.get_port_user(USER2, distance=0, simple=True)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                         times=[ProposalTime(start_date=5, duration=15, expire_date=20)])
+                         times=[ProposalTime()])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
@@ -38,10 +39,18 @@ class TestNewRequest(unittest.TestCase):
     
   def test_new_multiple_later_requests(self):
     u = sm.get_port_user(USER2, distance=1, simple=True)
+    # start_1 = h.now() if self.item['start_now'] else self.item['start_date']
+    #   if self.item['cancel_buffer'] == 0:
+    #     cancel_buffer = t.CANCEL_DEFAULT_MINUTES
+    #   else:
+    #     cancel_buffer = self.item['cancel_buffer']
+    #   self.item['alt'] = [{'start_date': (start_1 + t.DEFAULT_NEXT_DELTA)
+    time1 = ProposalTime()
+    start_1 = sm.now() if time1.start_now else time1.start_date
+    time2 = ProposalTime(start_date=start_1 + port.DEFAULT_NEXT_DELTA)
     port_prop = Proposal(user=u, min_size=3, max_size=10, 
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                         times=[ProposalTime(start_date=0, duration=15, expire_date=20),
-                                ProposalTime(start_date=1, duration=15, expire_date=20)])
+                         times=[time1, time2])
     requests = tuple(ri._new_requests(poptibo_id, port_prop))
     for i, request in enumerate(requests):
       # self.assertEqual(request.request_id, port_prop.times[i].time_id)
