@@ -96,7 +96,8 @@ class TestAddRequest(unittest.TestCase):
   def setUp(self):
     ri.repo = Mock()
     # ri.repo.save_requests = _mock_save_requests
-    ri.repo.requests_by_user = lambda u: []
+    # ri.repo.requests_by_user = lambda x: []
+    ri.repo.current_requests = lambda : []
   
   def test_return_prop_id(self):
     port_prop = Proposal()
