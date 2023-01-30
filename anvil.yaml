@@ -530,3 +530,7 @@ db_schema:
     - name: current
       admin_ui: {width: 200}
       type: bool
+secrets:
+  test_user3_email:
+    value: {? '' : 5bwGUbvDugN6ur/2P15v9oUWIZw4yCrv5Wm4AdmAWYmyOz2ebBPH+mSwT3ayALAgiCNA8rlYJwU0KrP6zpbQXHwtPMrpx1+4wVR9WFHdgSNh8hyyoyy3Ptt4bkXEQ9WQSQdafWqY6fBdhXG2GPkFvPp0Zfr+7w==}
+    type: secret

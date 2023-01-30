@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 from datetime import datetime, timedelta
-from .misc_server_test import ADMIN, USER2
+from .misc_server_test import ADMIN, USER2, USER3
 from empathy_chat import request_interactor as ri
 from empathy_chat import request_gateway as rg
 from empathy_chat.portable import Proposal, ProposalTime
@@ -11,8 +11,9 @@ from empathy_chat import server_misc as sm
 from empathy_chat import requests as rs
 
 
-user2_id = USER2.get_id()
 admin_id = ADMIN.get_id()
+user2_id = USER2.get_id()
+user3_id = USER3.get_id()
 
 u = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
@@ -34,6 +35,13 @@ o_port_prop1 = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), m
 o_port_prop_now = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), min_size=2, max_size=3,
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                          times=[ProposalTime(start_now=True)])
+o_port_prop1_size3 = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), min_size=2, max_size=2,
+                   eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+                   times=[time1])
+
+o3_port_prop1 = Proposal(user=sm.get_port_user(USER3, distance=0, simple=True), min_size=3, max_size=10,
+                   eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+                   times=[time1])
 
 
 class TestNewRequest(unittest.TestCase):
@@ -144,6 +152,23 @@ class TestNewRequest(unittest.TestCase):
     self.assertIn({new_requests[0], o_requests[0]},
                   potential_matches)
     self.assertEqual(len(potential_matches), 1)
+
+    new_requests = tuple(ri._new_requests(user2_id, port_prop1))
+    o_requests = (tuple(ri._new_requests(admin_id, o_port_prop1))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertIn({new_requests[0], o_requests[1]},
+                  potential_matches)
+    self.assertEqual(len(potential_matches), 1)
+
+  def test_new_later_requests_size3_match(self):
+    new_requests = tuple(ri._new_requests(user2_id, port_prop1))
+    o_requests = (tuple(ri._new_requests(admin_id, o_port_prop1_size3))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertIn({new_requests[0], o_requests[0], o_requests[1]},
+                  potential_matches)
+    self.assertEqual(len(potential_matches), 3)
     
 # def _mock_save_requests(requests):
 #   for r in requests:
