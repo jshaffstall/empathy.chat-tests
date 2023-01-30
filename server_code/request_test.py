@@ -35,7 +35,7 @@ o_port_prop1 = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), m
 o_port_prop_now = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), min_size=2, max_size=3,
                          eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                          times=[ProposalTime(start_now=True)])
-o_port_prop1_size3 = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), min_size=2, max_size=2,
+o_port_prop1_size3 = Proposal(user=sm.get_port_user(ADMIN, distance=0, simple=True), min_size=2, max_size=3,
                    eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
                    times=[time1])
 
@@ -169,6 +169,42 @@ class TestNewRequest(unittest.TestCase):
     self.assertIn({new_requests[0], o_requests[0], o_requests[1]},
                   potential_matches)
     self.assertEqual(len(potential_matches), 3)
+
+    new_requests = tuple(ri._new_requests(user2_id, port_prop1))
+    o_requests = (tuple(ri._new_requests(admin_id, o_port_prop1_size3))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1))
+                  + tuple(ri._new_requests(admin_id, o_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertIn({new_requests[0], o_requests[0], o_requests[1]},
+                  potential_matches)
+    self.assertEqual(len(potential_matches), 3)
+
+    new_requests = tuple(ri._new_requests(user2_id, port_prop2))
+    o_requests = (tuple(ri._new_requests(admin_id, o_port_prop1_size3))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertIn({new_requests[0], o_requests[0], o_requests[1]},
+                  potential_matches)
+    self.assertEqual(len(potential_matches), 3)
+
+    new_requests = tuple(ri._new_requests(user2_id, port_prop2))
+    o_requests = (tuple(ri._new_requests(admin_id, o_port_prop1_size3))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1))
+                  + tuple(ri._new_requests(admin_id, o_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertIn({new_requests[0], o_requests[0], o_requests[1]},
+                  potential_matches)
+    self.assertEqual(len(potential_matches), 4)
+
+  def test_new_later_requests_no_size3_match(self):
+    new_requests = tuple(ri._new_requests(admin_id, o_port_prop1))
+    o_requests = (tuple(ri._new_requests(user2_id, port_prop2))
+                  + tuple(ri._new_requests(user3_id, o3_port_prop1)))
+    potential_matches = rs.potential_matches(new_requests, o_requests)
+    self.assertNotIn({new_requests[0], o_requests[0], o_requests[1]},
+                     potential_matches)
+    self.assertEqual(len(potential_matches), 1)
+    self.assertIn({new_requests[0], o_requests[0]}, potential_matches)
     
 # def _mock_save_requests(requests):
 #   for r in requests:
