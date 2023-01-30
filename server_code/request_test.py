@@ -12,85 +12,72 @@ from empathy_chat import requests as rs
 
 poptibo_id = USER2.get_id()
 
+u = sm.get_port_user(USER2, distance=0, simple=True)
+time1 = ProposalTime()
+port_prop1 = Proposal(user=u, min_size=3, max_size=10, 
+                      eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+                      times=[time1])
+start_1 = sm.now() if time1.start_now else time1.start_date
+time2 = ProposalTime(start_date=start_1 + port.DEFAULT_NEXT_DELTA)
+port_prop2 = Proposal(user=u, min_size=3, max_size=10, 
+                      eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+                      times=[time1, time2])
 
 class TestNewRequest(unittest.TestCase):
   def test_new_single_later_request(self):
-    u = sm.get_port_user(USER2, distance=0, simple=True)
-    port_prop = Proposal(user=u, min_size=3, max_size=10, 
-                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                         times=[ProposalTime()])
-    requests = tuple(ri._new_requests(poptibo_id, port_prop))
+
+    requests = tuple(ri._new_requests(poptibo_id, port_prop1))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
     # self.assertEqual(request.or_group_id, port_prop.prop_id)
     self.assertFalse(request.request_id)
     self.assertTrue(request.or_group_id)
-    self.assertEqual(request.eformat.duration, port_prop.times[0].duration)
-    self.assertEqual(request.expire_dt, port_prop.times[0].expire_date)
-    self.assertEqual(request.user, port_prop.user)
-    self.assertEqual(request.start_dt, port_prop.times[0].start_date)
+    self.assertEqual(request.eformat.duration, port_prop1.times[0].duration)
+    self.assertEqual(request.expire_dt, port_prop1.times[0].expire_date)
+    self.assertEqual(request.user, port_prop1.user)
+    self.assertEqual(request.start_dt, port_prop1.times[0].start_date)
     self.assertEqual(request.create_dt, request.edit_dt)
-    self.assertEqual(request.min_size, port_prop.min_size)
-    self.assertEqual(request.max_size, port_prop.max_size)
-    self.assertEqual(request.eligible, port_prop.eligible)
-    self.assertEqual(request.eligible_users, port_prop.eligible_users)
-    self.assertEqual(request.eligible_groups, port_prop.eligible_groups)
-    self.assertEqual(request.eligible_starred, port_prop.eligible_starred)
+    self.assertEqual(request.min_size, port_prop1.min_size)
+    self.assertEqual(request.max_size, port_prop1.max_size)
+    self.assertEqual(request.eligible, port_prop1.eligible)
+    self.assertEqual(request.eligible_users, port_prop1.eligible_users)
+    self.assertEqual(request.eligible_groups, port_prop1.eligible_groups)
+    self.assertEqual(request.eligible_starred, port_prop1.eligible_starred)
     self.assertEqual(request.current, True)
     
   def test_new_multiple_later_requests(self):
-    u = sm.get_port_user(USER2, distance=1, simple=True)
-    # start_1 = h.now() if self.item['start_now'] else self.item['start_date']
-    #   if self.item['cancel_buffer'] == 0:
-    #     cancel_buffer = t.CANCEL_DEFAULT_MINUTES
-    #   else:
-    #     cancel_buffer = self.item['cancel_buffer']
-    #   self.item['alt'] = [{'start_date': (start_1 + t.DEFAULT_NEXT_DELTA)
-    time1 = ProposalTime()
-    start_1 = sm.now() if time1.start_now else time1.start_date
-    time2 = ProposalTime(start_date=start_1 + port.DEFAULT_NEXT_DELTA)
-    port_prop = Proposal(user=u, min_size=3, max_size=10, 
-                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                         times=[time1, time2])
-    requests = tuple(ri._new_requests(poptibo_id, port_prop))
+    requests = tuple(ri._new_requests(poptibo_id, port_prop2))
     for i, request in enumerate(requests):
       # self.assertEqual(request.request_id, port_prop.times[i].time_id)
       # self.assertEqual(request.or_group_id, port_prop.prop_id)
       self.assertFalse(request.request_id)
       self.assertTrue(request.or_group_id)
-      self.assertEqual(request.eformat.duration, port_prop.times[i].duration)
-      self.assertEqual(request.expire_dt, port_prop.times[i].expire_date)
-      self.assertEqual(request.user, port_prop.user)
-      self.assertEqual(request.start_dt, port_prop.times[i].start_date)
+      self.assertEqual(request.eformat.duration, port_prop2.times[i].duration)
+      self.assertEqual(request.expire_dt, port_prop2.times[i].expire_date)
+      self.assertEqual(request.user, port_prop2.user)
+      self.assertEqual(request.start_dt, port_prop2.times[i].start_date)
       self.assertEqual(request.create_dt, request.edit_dt)
-      self.assertEqual(request.min_size, port_prop.min_size)
-      self.assertEqual(request.max_size, port_prop.max_size)
-      self.assertEqual(request.eligible, port_prop.eligible)
-      self.assertEqual(request.eligible_users, port_prop.eligible_users)
-      self.assertEqual(request.eligible_groups, port_prop.eligible_groups)
-      self.assertEqual(request.eligible_starred, port_prop.eligible_starred)
+      self.assertEqual(request.min_size, port_prop2.min_size)
+      self.assertEqual(request.max_size, port_prop2.max_size)
+      self.assertEqual(request.eligible, port_prop2.eligible)
+      self.assertEqual(request.eligible_users, port_prop2.eligible_users)
+      self.assertEqual(request.eligible_groups, port_prop2.eligible_groups)
+      self.assertEqual(request.eligible_starred, port_prop2.eligible_starred)
       self.assertEqual(request.current, True)
 
   def test_new_single_later_request_only_no_conflicts(self):
-    u = sm.get_port_user(USER2, distance=0, simple=True)
-    port_prop = Proposal(user=u, min_size=3, max_size=10, 
-                        eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                        times=[ProposalTime()])
-    requests = tuple(ri._new_requests(poptibo_id, port_prop))
+    requests = tuple(ri._new_requests(poptibo_id, port_prop1))
     self.assertFalse(rs.have_conflicts(requests))
 
   def test_new_single_later_request_conflict(self):
-    u = sm.get_port_user(USER2, distance=0, simple=True)
-    port_prop = Proposal(user=u, min_size=3, max_size=10, 
-                        eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                        times=[ProposalTime()])
-    requests = list(ri._new_requests(poptibo_id, port_prop))
-    requests.extend(ri._new_requests(poptibo_id, port_prop))
+    requests = list(ri._new_requests(poptibo_id, port_prop1))
+    requests.extend(ri._new_requests(poptibo_id, port_prop1))
     self.assertTrue(rs.have_conflicts(requests))
-      
+
 # def _mock_save_requests(requests):
 #   for r in requests:
 #     r.or_group_id = 11
+
 
 class TestAddRequest(unittest.TestCase):
   def setUp(self):
