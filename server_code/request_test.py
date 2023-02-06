@@ -59,7 +59,7 @@ prop_u3_3to10_in1hr = Proposal(
 class TestNewRequests(unittest.TestCase):
   def test_new_single_later_request(self):
     prop = prop_u2_3to10_in1hr
-    requests = tuple(rs.prop_to_requests(user2_id, prop))
+    requests = tuple(rs.prop_to_requests(prop))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
     # self.assertEqual(request.or_group_id, port_prop.prop_id)
@@ -80,7 +80,7 @@ class TestNewRequests(unittest.TestCase):
 
   def test_new_single_now_request(self):
     prop = prop_u2_2to3_now
-    requests = tuple(rs.prop_to_requests(user2_id, prop))
+    requests = tuple(rs.prop_to_requests(prop))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
     # self.assertEqual(request.or_group_id, port_prop.prop_id)
@@ -100,7 +100,7 @@ class TestNewRequests(unittest.TestCase):
     self.assertEqual(request.current, True)
     
   def test_new_multiple_later_requests(self):
-    requests = tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
+    requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     for i, request in enumerate(requests):
       # self.assertEqual(request.request_id, port_prop.times[i].time_id)
       # self.assertEqual(request.or_group_id, port_prop.prop_id)
@@ -122,56 +122,56 @@ class TestNewRequests(unittest.TestCase):
 
 class TestHaveConflicts(unittest.TestCase):
   def test_new_single_later_request_only_no_conflicts(self):
-    requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
+    requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     self.assertFalse(rs.have_conflicts(requests))
 
   def test_new_single_later_request_conflict(self):
-    requests = list(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    requests.extend(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
+    requests = list(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    requests.extend(rs.prop_to_requests(prop_u2_3to10_in1hr))
     self.assertTrue(rs.have_conflicts(requests))
 
   def test_new_multiple_later_requests_conflict(self):
-    requests = list(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    requests.extend(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
+    requests = list(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    requests.extend(rs.prop_to_requests(prop_u2_3to10_in1hr))
     self.assertTrue(rs.have_conflicts(requests))
 
-    requests = list(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    requests.extend(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
+    requests = list(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    requests.extend(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     self.assertTrue(rs.have_conflicts(requests))
 
   def test_new_multiple_requests_no_conflict(self):
-    requests = list(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    requests.extend(rs.prop_to_requests(user2_id, prop_u2_2to3_now))
+    requests = list(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    requests.extend(rs.prop_to_requests(prop_u2_2to3_now))
     self.assertFalse(rs.have_conflicts(requests))
 
-    requests = list(rs.prop_to_requests(user2_id, prop_u2_2to3_now))
-    requests.extend(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
+    requests = list(rs.prop_to_requests(prop_u2_2to3_now))
+    requests.extend(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     self.assertFalse(rs.have_conflicts(requests))
 
   def test_new_single_later_request_only_no_conflicts(self):
-    requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
+    requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     self.assertFalse(rs.have_conflicts(requests))
 
 
 class TestPotentialMatches(unittest.TestCase):
   def test_new_later_requests_no_match(self):
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    o_requests = tuple(rs.prop_to_requests(admin_id, prop_uA_2to3_now))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    o_requests = tuple(rs.prop_to_requests(prop_uA_2to3_now))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
 
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    o_requests = tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
 
   def test_new_later_requests_match(self):
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    o_requests = tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertEqual(rs.exchange_formed(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0]}))
 
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertIn(rs.ExchangeProspect({new_requests[0], o_requests[1]}),
                   potential_matches)
@@ -179,44 +179,44 @@ class TestPotentialMatches(unittest.TestCase):
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
 
   def test_new_later_requests_size3_match(self):
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr_size3))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_formed(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_3to10_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr_size3))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr))
-                  + tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr))
+                  + tuple(rs.prop_to_requests(prop_uA_2to2_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_formed(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    o_requests = (tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr_size3))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_formed(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
-    new_requests = tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-    o_requests = (tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr_size3))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr))
-                  + tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr))
+                  + tuple(rs.prop_to_requests(prop_uA_2to2_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 4)
     self.assertEqual(rs.exchange_formed(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
   def test_new_later_requests_no_size3_match(self):
-    new_requests = tuple(rs.prop_to_requests(admin_id, prop_uA_2to2_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(user2_id, prop_u2_2to3_in1hr_in2hr))
-                  + tuple(rs.prop_to_requests(user3_id, prop_u3_3to10_in1hr)))
+    new_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
+    o_requests = (tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertNotIn({new_requests[0], o_requests[0], o_requests[1]},
                      potential_matches)
