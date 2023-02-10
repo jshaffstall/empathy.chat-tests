@@ -49,8 +49,9 @@ prop_uA_2to2_in1hr_size3 = Proposal(
   times=[time1],
 )
 
+u3 = sm.get_port_user(USER3, distance=0, simple=True)
 prop_u3_3to10_in1hr = Proposal(
-  user=sm.get_port_user(USER3, distance=0, simple=True), min_size=3, max_size=10,
+  user=u3, min_size=3, max_size=10,
   eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
   times=[time1],
 )
@@ -59,7 +60,7 @@ prop_u3_3to10_in1hr = Proposal(
 class TestNewRequests(unittest.TestCase):
   def test_new_single_later_request(self):
     prop = prop_u2_3to10_in1hr
-    requests = tuple(rs.prop_to_requests(prop))
+    requests = tuple(rs.prop_to_requests(prop, with_users=[uA]))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
     # self.assertEqual(request.or_group_id, port_prop.prop_id)
@@ -77,6 +78,7 @@ class TestNewRequests(unittest.TestCase):
     self.assertEqual(request.eligible_groups, prop.eligible_groups)
     self.assertEqual(request.eligible_starred, prop.eligible_starred)
     self.assertEqual(request.current, True)
+    self.assertEqual(tuple(request.with_users), (uA,))
 
   def test_new_single_now_request(self):
     prop = prop_u2_2to3_now
@@ -162,6 +164,12 @@ class TestPotentialMatches(unittest.TestCase):
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
+
+  def test_new_later_requests_no_potential_matches(self):
+    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr, with_users=[u3]))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
+                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
+    self.assertFalse(rs.potential_matches(new_requests, o_requests))
 
   def test_new_later_requests_match(self):
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
