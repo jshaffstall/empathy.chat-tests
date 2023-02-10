@@ -165,12 +165,10 @@ class TestPotentialMatches(unittest.TestCase):
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
 
-  def test_new_later_requests_no_potential_matches(self):
-    new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr, with_users=[u3]))
-    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
-                  + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
-    self.assertFalse(rs.potential_matches(new_requests, o_requests))
-
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr, with_users=[u3]))
+    o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
+    self.assertFalse(rs.exchange_formed(new_requests, o_requests))
+  
   def test_new_later_requests_match(self):
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
