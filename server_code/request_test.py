@@ -15,44 +15,46 @@ admin_id = ADMIN.get_id()
 user2_id = USER2.get_id()
 user3_id = USER3.get_id()
 
-u = sm.get_port_user(USER2, distance=0, simple=True)
+u2 = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
 prop_u2_3to10_in1hr = Proposal(
-  user=u, min_size=3, max_size=10, 
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  user=u2, min_size=3, max_size=10, 
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
   times=[time1],
 )
 time2 = ProposalTime(start_date=time1.start_date + port.DEFAULT_NEXT_DELTA)
 prop_u2_2to3_in1hr_in2hr = Proposal(
-  user=u, min_size=2, max_size=3,
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  user=u2, min_size=2, max_size=3,
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
   times=[time1, time2],
 )
-prop_u2_2to3_now = Proposal(user=u, min_size=2, max_size=3,
-                         eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
-                         times=[ProposalTime(start_now=True)])
+prop_u2_2to3_now = Proposal(
+  user=u2, min_size=2, max_size=3,
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
+  times=[ProposalTime(start_now=True)]
+)
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
   times=[time1],
 )
 prop_uA_2to3_now = Proposal(
   user=uA, min_size=2, max_size=3,
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
   times=[ProposalTime(start_now=True)],
 )
 prop_uA_2to2_in1hr_size3 = Proposal(
   user=uA, min_size=2, max_size=3,
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
   times=[time1],
 )
 
 u3 = sm.get_port_user(USER3, distance=0, simple=True)
 prop_u3_3to10_in1hr = Proposal(
   user=u3, min_size=3, max_size=10,
-  eligible=2, eligible_users=["u1"], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
   times=[time1],
 )
 
@@ -60,7 +62,7 @@ prop_u3_3to10_in1hr = Proposal(
 class TestNewRequests(unittest.TestCase):
   def test_new_single_later_request(self):
     prop = prop_u2_3to10_in1hr
-    requests = tuple(rs.prop_to_requests(prop, with_users=[uA]))
+    requests = tuple(rs.prop_to_requests(prop, with_users=[admin_id]))
     request = requests[0]
     # self.assertEqual(request.request_id, port_prop.times[0].time_id)
     # self.assertEqual(request.or_group_id, port_prop.prop_id)
@@ -68,17 +70,17 @@ class TestNewRequests(unittest.TestCase):
     self.assertTrue(request.or_group_id)
     self.assertEqual(request.eformat.duration, prop.times[0].duration)
     self.assertEqual(request.expire_dt, prop.times[0].expire_date)
-    self.assertEqual(request.user, prop.user)
+    self.assertEqual(request.user, prop.user.user_id)
     self.assertEqual(request.start_dt, prop.times[0].start_date)
     self.assertEqual(request.create_dt, request.edit_dt)
     self.assertEqual(request.min_size, prop.min_size)
     self.assertEqual(request.max_size, prop.max_size)
     self.assertEqual(request.eligible, prop.eligible)
-    self.assertEqual(request.eligible_users, prop.eligible_users)
+    self.assertEqual(request.eligible_users, [pu.user_id for pu in prop.eligible_users])
     self.assertEqual(request.eligible_groups, prop.eligible_groups)
     self.assertEqual(request.eligible_starred, prop.eligible_starred)
     self.assertEqual(request.current, True)
-    self.assertEqual(tuple(request.with_users), (uA,))
+    self.assertEqual(tuple(request.with_users), (admin_id,))
 
   def test_new_single_now_request(self):
     prop = prop_u2_2to3_now
@@ -90,13 +92,13 @@ class TestNewRequests(unittest.TestCase):
     self.assertTrue(request.or_group_id)
     self.assertEqual(request.eformat.duration, prop.times[0].duration)
     self.assertEqual(request.expire_dt, request.start_dt + timedelta(seconds=p.WAIT_SECONDS))
-    self.assertEqual(request.user, prop.user)
+    self.assertEqual(request.user, prop.user.user_id)
     self.assertTrue(request.start_dt <= sm.now())
     self.assertEqual(request.create_dt, request.edit_dt)
     self.assertEqual(request.min_size, prop.min_size)
     self.assertEqual(request.max_size, prop.max_size)
     self.assertEqual(request.eligible, prop.eligible)
-    self.assertEqual(request.eligible_users, prop.eligible_users)
+    self.assertEqual(request.eligible_users, [pu.user_id for pu in prop.eligible_users])
     self.assertEqual(request.eligible_groups, prop.eligible_groups)
     self.assertEqual(request.eligible_starred, prop.eligible_starred)
     self.assertEqual(request.current, True)
@@ -110,13 +112,13 @@ class TestNewRequests(unittest.TestCase):
       self.assertTrue(request.or_group_id)
       self.assertEqual(request.eformat.duration, prop_u2_2to3_in1hr_in2hr.times[i].duration)
       self.assertEqual(request.expire_dt, prop_u2_2to3_in1hr_in2hr.times[i].expire_date)
-      self.assertEqual(request.user, prop_u2_2to3_in1hr_in2hr.user)
+      self.assertEqual(request.user, prop_u2_2to3_in1hr_in2hr.user.user_id)
       self.assertEqual(request.start_dt, prop_u2_2to3_in1hr_in2hr.times[i].start_date)
       self.assertEqual(request.create_dt, request.edit_dt)
       self.assertEqual(request.min_size, prop_u2_2to3_in1hr_in2hr.min_size)
       self.assertEqual(request.max_size, prop_u2_2to3_in1hr_in2hr.max_size)
       self.assertEqual(request.eligible, prop_u2_2to3_in1hr_in2hr.eligible)
-      self.assertEqual(request.eligible_users, prop_u2_2to3_in1hr_in2hr.eligible_users)
+      self.assertEqual(request.eligible_users, [pu.user_id for pu in prop_u2_2to3_in1hr_in2hr.eligible_users])
       self.assertEqual(request.eligible_groups, prop_u2_2to3_in1hr_in2hr.eligible_groups)
       self.assertEqual(request.eligible_starred, prop_u2_2to3_in1hr_in2hr.eligible_starred)
       self.assertEqual(request.current, True)
@@ -165,15 +167,15 @@ class TestPotentialMatches(unittest.TestCase):
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
 
-    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr, with_users=[u3]))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr, with_users=[user3_id]))
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
     self.assertFalse(rs.exchange_formed(new_requests, o_requests))
   
   def test_new_later_requests_match(self):
-    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
-    o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
-    self.assertEqual(rs.exchange_formed(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0]}))
+    new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr, with_users=[admin_id]))
+    o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr, with_users=[user2_id]))
+    ep = rs.ExchangeProspect({new_requests[0], o_requests[0]})
+    self.assertEqual(rs.exchange_formed(new_requests, o_requests), ep)
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
@@ -239,11 +241,13 @@ class TestAddRequest(unittest.TestCase):
   def setUp(self):
     ri.repo = Mock()
     # ri.repo.save_requests = _mock_save_requests
-    # ri.repo.requests_by_user = lambda x: []
-    ri.repo.current_requests = lambda : []
+    ri.repo.requests_by_user = lambda x: []
+    def cr(records=False):
+      return []
+    ri.repo.current_requests = cr
   
   def test_return_prop_id(self):
-    port_prop = Proposal()
+    port_prop = Proposal(user=u2)
     prop_id = ri._add_request(USER2, port_prop)
     self.assertTrue(prop_id)
     ri.repo.RequestRecord.assert_called_once()
