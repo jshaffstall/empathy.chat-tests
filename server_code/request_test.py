@@ -9,52 +9,56 @@ import empathy_chat.portable as port
 import empathy_chat.parameters as p
 from empathy_chat import server_misc as sm
 from empathy_chat import requests as rs
+from empathy_chat import groups
+from anvil.tables import app_tables
 
 
 admin_id = ADMIN.get_id()
 user2_id = USER2.get_id()
 user3_id = USER3.get_id()
 
+group0_row = app_tables.groups.search()[0]
+group0 = groups.Group(group0_row['name'], group_id=group0_row.get_id())
 u2 = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
 prop_u2_3to10_in1hr = Proposal(
   user=u2, min_size=3, max_size=10, 
-  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=[group0], eligible_starred=True,
   times=[time1],
 )
 time2 = ProposalTime(start_date=time1.start_date + port.DEFAULT_NEXT_DELTA)
 prop_u2_2to3_in1hr_in2hr = Proposal(
   user=u2, min_size=2, max_size=3,
-  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=[group0], eligible_starred=True,
   times=[time1, time2],
 )
 prop_u2_2to3_now = Proposal(
   user=u2, min_size=2, max_size=3,
-  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[port.User(user_id="u1")], eligible_groups=[group0], eligible_starred=True,
   times=[ProposalTime(start_now=True)]
 )
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
-  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 prop_uA_2to3_now = Proposal(
   user=uA, min_size=2, max_size=3,
-  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[ProposalTime(start_now=True)],
 )
 prop_uA_2to2_in1hr_size3 = Proposal(
   user=uA, min_size=2, max_size=3,
-  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 
 u3 = sm.get_port_user(USER3, distance=0, simple=True)
 prop_u3_3to10_in1hr = Proposal(
   user=u3, min_size=3, max_size=10,
-  eligible=2, eligible_users=[], eligible_groups=["g1"], eligible_starred=True,
+  eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 
