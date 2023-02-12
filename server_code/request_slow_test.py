@@ -17,4 +17,8 @@ class TestRequestRecord(unittest.TestCase):
     self.assertFalse(request_record.record_id)
     request_record.save()
     self.assertTrue(request_record.record_id)
-    self.
+    self.request_records_created.append(request_record)
+
+  def tearDown(self):
+    for rr in self.request_records_created:
+      rr._row.delete()
