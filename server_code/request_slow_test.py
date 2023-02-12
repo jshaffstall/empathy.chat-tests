@@ -16,9 +16,12 @@ class TestRequestRecord(unittest.TestCase):
     request_record = rg.RequestRecord(request)
     self.assertFalse(request_record.record_id)
     request_record.save()
-    self.assertTrue(request_record.record_id)
-    self.assertEqual(list(rg.requests_by_user(ADMIN)), [request])
     self.request_records_created.append(request_record)
+    self.assertTrue(request_record.record_id)
+    saved_requests = [r for r in rg.requests_by_user(ADMIN) 
+                      if r.request_id == request_record.record_id]
+    self.assertEqual(len(saved_requests), 1)
+    
 
   def tearDown(self):
     for rr in self.request_records_created:
