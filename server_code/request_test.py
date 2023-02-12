@@ -246,6 +246,7 @@ class TestAddRequest(unittest.TestCase):
     ri.repo = Mock()
     # ri.repo.save_requests = _mock_save_requests
     ri.repo.requests_by_user = lambda x: []
+    ri.repo.partially_matching_requests = lambda x, y, records=False: []
     def cr(records=False):
       return []
     ri.repo.current_requests = cr
