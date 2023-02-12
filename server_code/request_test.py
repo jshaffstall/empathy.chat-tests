@@ -39,6 +39,9 @@ prop_u2_2to3_now = Proposal(
 )
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
+prop_uA_3to10_in1hr = Proposal(user=uA, min_size=3, max_size=10,
+                             eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
+                             times=[ProposalTime(duration=15)])
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
   eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
@@ -259,17 +262,3 @@ class TestAddRequest(unittest.TestCase):
 
   def tearDown(self):
     ri.reset_repo()
-
-
-# class TestRequestRecord(unittest.TestCase):
-#   def test_save_request(self):
-#     u = sm.get_port_user(USER2, distance=1, simple=True)
-#     port_prop = Proposal(user=u, min_size=3, max_size=10, 
-#                          eligible=2, eligible_users=[sm.get_port_user(ADMIN, distance=1, simple=True)], eligible_groups=[], eligible_starred=True,
-#                          times=[ProposalTime(start_date=datetime.now(), duration=15, expire_date=datetime.now())])
-#     request = next(rs.prop_to_requests(USER2, port_prop))
-#     request_record = rg.RequestRecord(request)
-#     self.assertFalse(request_record.record_id)
-#     request_record.save()
-#     self.assertTrue(request_record.record_id)
-    
