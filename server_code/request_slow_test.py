@@ -48,29 +48,37 @@ class TestRequestGateway(unittest.TestCase):
     requests = rs.prop_to_requests(rt.prop_u3_3to10_in1hr)
     pmrrs = list(ri.potential_matching_request_records(requests, sm.now()))
     self.assertEqual(len(pmrrs), 1)
-    self.assertEqual(pmrrs[0]._entity.or_group_id, or_group_id)
-    self.assertEqual(pmrrs[0]._entity.start_dt, rt.prop_u2_2to3_in1hr_in2hr.times[0].start_date)
+    self.assertEqual(pmrrs[0].entity.or_group_id, or_group_id)
+    self.assertEqual(pmrrs[0].entity.start_dt, rt.prop_u2_2to3_in1hr_in2hr.times[0].start_date)
 
-  # def test_visible_requests(self):
-  #   or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
-  #   self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
-  #   request = next(rs.prop_to_requests(rt.prop_uA_3to10_in1hr, with_users=[]))
-  #   request_record = rg.RequestRecord(request)
-  #   request_record.save()
-  #   self.request_records_created.append(request_record)
-  #   visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
-  #   self.assertEqual(len(visible_requests), 1)
-  #   self.assertEqual(visible_requests[0].or_group_id, request.or_group_id)
-
-  def test_visible_requests_with(self):
+  def test_visible_requests(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     or_group_id1 = ri._add_request(ADMIN, rt.prop_uA_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0, or_group_id1)))
-    all_current_request_records = list(rg.current_requests(records=True))
-    self.assertEqual(len(all_current_request_records), 2)
-    visible_requests = ri.current_visible_requests(USER2, all_current_request_records)
+    visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
     self.assertEqual(visible_requests[0].or_group_id, or_group_id1)
+
+  def test_visible_request_with(self):
+    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
+    request = next(rs.prop_to_requests(rt.prop_uA_3to10_in1hr, with_users=[rt.u2.user_id]))
+    request_record = rg.RequestRecord(request)
+    request_record.save()
+    self.request_records_created.append(request_record)
+    visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
+    self.assertEqual(len(visible_requests), 1)
+    self.assertEqual(visible_requests[0].or_group_id, request.or_group_id)
+
+  def test_not_visible_request_with(self):
+    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
+    request = next(rs.prop_to_requests(rt.prop_uA_3to10_in1hr, with_users=[rt.u3.user_id]))
+    request_record = rg.RequestRecord(request)
+    request_record.save()
+    self.request_records_created.append(request_record)
+    visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
+    self.assertFalse(visible_requests)
   
   def tearDown(self):
     for rr in self.request_records_created:
