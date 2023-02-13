@@ -39,9 +39,11 @@ prop_u2_2to3_now = Proposal(
 )
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
-prop_uA_3to10_in1hr = Proposal(user=uA, min_size=3, max_size=10,
-                             eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
-                             times=[ProposalTime(duration=15)])
+prop_uA_3to10_in1hr = Proposal(
+  user=uA, min_size=3, max_size=10,
+  eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
+  times=[ProposalTime(duration=15)]
+)
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
   eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
@@ -129,6 +131,7 @@ class TestNewRequests(unittest.TestCase):
       self.assertEqual(request.eligible_groups, prop_u2_2to3_in1hr_in2hr.eligible_groups)
       self.assertEqual(request.eligible_starred, prop_u2_2to3_in1hr_in2hr.eligible_starred)
       self.assertEqual(request.current, True)
+    self.assertTrue(requests[0].pref_order < requests[1].pref_order)
 
 
 class TestHaveConflicts(unittest.TestCase):
