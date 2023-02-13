@@ -46,7 +46,7 @@ prop_uA_3to10_in1hr = Proposal(
 )
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
-  eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
+  eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 prop_uA_2to3_now = Proposal(

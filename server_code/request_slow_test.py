@@ -53,7 +53,7 @@ class TestRequestGateway(unittest.TestCase):
 
   def test_visible_requests(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
-    or_group_id1 = ri._add_request(ADMIN, rt.prop_uA_3to10_in1hr)
+    or_group_id1 = ri._add_request(ADMIN, rt.prop_uA_2to2_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0, or_group_id1)))
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
@@ -62,7 +62,7 @@ class TestRequestGateway(unittest.TestCase):
   def test_visible_request_with(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
-    request = next(rs.prop_to_requests(rt.prop_uA_3to10_in1hr, with_users=[rt.u2.user_id]))
+    request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u2.user_id]))
     request_record = rg.RequestRecord(request)
     request_record.save()
     self.request_records_created.append(request_record)
@@ -73,7 +73,7 @@ class TestRequestGateway(unittest.TestCase):
   def test_not_visible_request_with(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
-    request = next(rs.prop_to_requests(rt.prop_uA_3to10_in1hr, with_users=[rt.u3.user_id]))
+    request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u3.user_id]))
     request_record = rg.RequestRecord(request)
     request_record.save()
     self.request_records_created.append(request_record)
