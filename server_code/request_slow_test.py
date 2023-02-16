@@ -7,6 +7,67 @@ from empathy_chat import request_interactor as ri
 from empathy_chat import request_gateway as rg
 from empathy_chat import requests as rs
 from empathy_chat import server_misc as sm
+from empathy_chat import portable as port
+
+
+class TestPropRequestProp(unittest.TestCase):
+  def test_new_single_later_request(self):
+    prop = rt.prop_u2_3to10_in1hr
+    requests = tuple(rs.prop_to_requests(prop))
+    _prop = list(ri.requests_to_props(requests, USER2))[0]
+    self.assertTrue(_prop.prop_id)
+    _prop.prop_id = None
+    # for proptime in _prop.times:
+    #   proptime.proptime_id = None
+    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    for key in _prop.__dict__:
+      if key == 'times':
+        for i, time in enumerate(_prop.times):
+          for tkey in time.__dict__:
+            self.assertEqual(getattr(time, tkey), getattr(prop.times[i], tkey))
+      else:
+        self.assertEqual(getattr(_prop, key), getattr(prop, key))
+    # self.assertEqual(_prop, prop)
+
+  def test_new_single_now_request(self):
+    prop = rt.prop_u2_2to3_now
+    requests = tuple(rs.prop_to_requests(prop))
+    _prop = list(ri.requests_to_props(requests, USER2))[0]
+    self.assertTrue(_prop.prop_id)
+    _prop.prop_id = None
+    # for proptime in _prop.times:
+    #   proptime.proptime_id = None
+    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    for key in _prop.__dict__:
+      if key == 'times':
+        for i, time in enumerate(_prop.times):
+          for tkey in time.__dict__:
+            if tkey == 'expire_date':
+              self.assertTrue(getattr(time, tkey))
+              self.assertFalse(getattr(prop.times[i], tkey))
+            else:
+              self.assertEqual(getattr(time, tkey), getattr(prop.times[i], tkey))
+      else:
+        self.assertEqual(getattr(_prop, key), getattr(prop, key))
+    # self.assertEqual(_prop, prop)
+    
+  def test_new_multiple_later_requests(self):
+    prop = rt.prop_u2_2to3_in1hr_in2hr
+    requests = tuple(rs.prop_to_requests(prop))
+    _prop = list(ri.requests_to_props(requests, USER2))[0]
+    self.assertTrue(_prop.prop_id)
+    _prop.prop_id = None
+    # for proptime in _prop.times:
+    #   proptime.proptime_id = None
+    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    for key in _prop.__dict__:
+      if key == 'times':
+        for i, time in enumerate(_prop.times):
+          for tkey in time.__dict__:
+            self.assertEqual(getattr(time, tkey), getattr(prop.times[i], tkey))
+      else:
+        self.assertEqual(getattr(_prop, key), getattr(prop, key))
+    # self.assertEqual(_prop, prop)
 
 
 class TestRequestGateway(unittest.TestCase):
