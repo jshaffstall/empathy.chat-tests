@@ -254,10 +254,10 @@ class TestAddRequest(unittest.TestCase):
     # ri.repo.save_requests = _mock_save_requests
     ri.repo.requests_by_user = lambda x: []
     ri.repo.partially_matching_requests = lambda x, y, records=False: []
-    def cr(records=False):
-      return []
-    ri.repo.current_requests = cr
-  
+    ri.repo.current_requests = lambda records=False: []
+    self._all_eligible_users = ri.all_eligible_users
+    ri.all_eligible_users = lambda x: []
+
   def test_return_prop_id(self):
     port_prop = Proposal(user=u2)
     prop_id = ri._add_request(USER2, port_prop)
@@ -266,3 +266,4 @@ class TestAddRequest(unittest.TestCase):
 
   def tearDown(self):
     ri.reset_repo()
+    ri.all_eligible_users = self._all_eligible_users
