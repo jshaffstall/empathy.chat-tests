@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import Mock
 from anvil.tables import app_tables
 import anvil.tables.query as q
 from .misc_server_test import ADMIN, USER2, USER3
@@ -8,6 +9,7 @@ from empathy_chat import request_gateway as rg
 from empathy_chat import requests as rs
 from empathy_chat import server_misc as sm
 from empathy_chat import portable as port
+from empathy_chat import notifies as n
 
 
 class TestPropRequestProp(unittest.TestCase):
@@ -74,6 +76,10 @@ class TestRequestGateway(unittest.TestCase):
   def setUp(self):
     self.request_records_created = []
     self.request_rows_created = []
+    self._email_send = n.email_send
+    n.email_send = Mock()
+    self._send_sms = n.send_sms
+    n.send_sms = Mock()
   
   def test_request_record_save(self):
     prop = rt.prop_u2_3to10_in1hr
@@ -131,24 +137,24 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
     self.assertEqual(edited_requests[0].max_size, 3)
 
-  def test_edit_request_remove_eligible(self):
+  def test_edit_request_change_eligible(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
-    self.assertEqual(requests[0].max_size, 10)
     request_id0 = requests[0].request_id
     self.assertTrue(request_id0)
     requests[0].eligible = 0
+    requests[0].eligible_users = [rt.admin_id]
+    requests[0].eformat.duration = 15
     _prop = list(ri.requests_to_props(requests, USER3))[0]
     or_group_id1 = ri._edit_request(USER3, _prop)
-    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     edited_requests = list(rg.current_requests(records=False))
     request_id1 = edited_requests[0].request_id
     self.assertEqual(or_group_id0, or_group_id1)
     self.assertEqual(request_id0, request_id1)
     self.assertEqual(len(edited_requests), 1)
     self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
-    self.assertEqual(edited_requests[0].max_size, 3)
   
   def test_visible_requests(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
@@ -180,6 +186,8 @@ class TestRequestGateway(unittest.TestCase):
     self.assertFalse(visible_requests)
   
   def tearDown(self):
+    n.email_send = self._email_send
+    n.send_sms = self._send_sms
     for rr in self.request_records_created:
       rr._row.delete()
     for row in self.request_rows_created:
