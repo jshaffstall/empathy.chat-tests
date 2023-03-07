@@ -112,6 +112,44 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(pmrrs[0].entity.or_group_id, or_group_id)
     self.assertEqual(pmrrs[0].entity.start_dt, rt.prop_u2_2to3_in1hr_in2hr.times[0].start_date)
 
+  def test_edit_request(self):
+    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    requests = list(rg.current_requests(records=False))
+    self.assertEqual(len(requests), 1)
+    self.assertEqual(requests[0].max_size, 10)
+    request_id0 = requests[0].request_id
+    self.assertTrue(request_id0)
+    requests[0].max_size = 3
+    _prop = list(ri.requests_to_props(requests, USER3))[0]
+    or_group_id1 = ri._edit_request(USER3, _prop)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
+    edited_requests = list(rg.current_requests(records=False))
+    request_id1 = edited_requests[0].request_id
+    self.assertEqual(or_group_id0, or_group_id1)
+    self.assertEqual(request_id0, request_id1)
+    self.assertEqual(len(edited_requests), 1)
+    self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
+    self.assertEqual(edited_requests[0].max_size, 3)
+
+  def test_edit_request_remove_eligible(self):
+    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    requests = list(rg.current_requests(records=False))
+    self.assertEqual(len(requests), 1)
+    self.assertEqual(requests[0].max_size, 10)
+    request_id0 = requests[0].request_id
+    self.assertTrue(request_id0)
+    requests[0].eligible = 0
+    _prop = list(ri.requests_to_props(requests, USER3))[0]
+    or_group_id1 = ri._edit_request(USER3, _prop)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
+    edited_requests = list(rg.current_requests(records=False))
+    request_id1 = edited_requests[0].request_id
+    self.assertEqual(or_group_id0, or_group_id1)
+    self.assertEqual(request_id0, request_id1)
+    self.assertEqual(len(edited_requests), 1)
+    self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
+    self.assertEqual(edited_requests[0].max_size, 3)
+  
   def test_visible_requests(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     or_group_id1 = ri._add_request(ADMIN, rt.prop_uA_2to2_in1hr)
