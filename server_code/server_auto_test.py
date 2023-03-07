@@ -18,6 +18,6 @@ def server_auto_tests(verbosity=1):
 @anvil.server.callable
 def slow_tests(verbosity=2):
   #unittest.main(exit=False)
-  test_modules = ['request_slow_test']#, 'exchange_test', 'invite_server_test',]
+  test_modules = ['request_slow_test', 'exchange_test', 'invite_server_test',]
   test = unittest.TestLoader().loadTestsFromNames(test_modules)
   unittest.TextTestRunner(stream=sys.stdout, verbosity=verbosity).run(test)
