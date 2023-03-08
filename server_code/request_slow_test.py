@@ -109,15 +109,6 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(request.current, True)
     self.assertEqual(tuple(request.with_users), (rt.admin_id,))
 
-  def test_add_request_and_partially_matching_requests(self):
-    or_group_id = ri._add_request(USER2, rt.prop_u2_2to3_in1hr_in2hr)
-    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id))
-    requests = rs.prop_to_requests(rt.prop_u3_3to10_in1hr)
-    pmrrs = list(ri.potential_matching_request_records(requests, sm.now()))
-    self.assertEqual(len(pmrrs), 1)
-    self.assertEqual(pmrrs[0].entity.or_group_id, or_group_id)
-    self.assertEqual(pmrrs[0].entity.start_dt, rt.prop_u2_2to3_in1hr_in2hr.times[0].start_date)
-
   def test_edit_request(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))

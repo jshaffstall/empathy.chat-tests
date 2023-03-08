@@ -253,7 +253,7 @@ class TestAddEditRequest(unittest.TestCase):
     ri.repo = Mock()
     # ri.repo.save_requests = _mock_save_requests
     ri.repo.requests_by_user = lambda x: []
-    ri.repo.partially_matching_requests = lambda x, y, records=False: []
+    ri.repo.partially_matching_requests = lambda u, x, y, records=False: []
     ri.repo.current_requests = lambda records=False: []
     self._all_eligible_users = ri.all_eligible_users
     ri.all_eligible_users = lambda x: set()
