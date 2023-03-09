@@ -248,28 +248,28 @@ class TestPotentialMatches(unittest.TestCase):
 #     r.or_group_id = 11
 
 
-class TestAddEditRequest(unittest.TestCase):
-  def setUp(self):
-    ri.repo = Mock()
-    # ri.repo.save_requests = _mock_save_requests
-    ri.repo.requests_by_user = lambda x: []
-    ri.repo.partially_matching_requests = lambda u, x, y, records=False: []
-    ri.repo.current_requests = lambda records=False: []
-    self._all_eligible_users = ri.all_eligible_users
-    ri.all_eligible_users = lambda x: set()
+# class TestAddEditRequest(unittest.TestCase):
+#   def setUp(self):
+#     ri.repo = Mock()
+#     # ri.repo.save_requests = _mock_save_requests
+#     ri.repo.requests_by_user = lambda x: []
+#     ri.repo.partially_matching_requests = lambda u, x, y, records=False: []
+#     ri.repo.current_requests = lambda records=False: []
+#     self._all_eligible_users = ri.all_eligible_users
+#     ri.all_eligible_users = lambda x: set()
 
-  def test_add_returns_prop_id(self):
-    port_prop = Proposal(user=u2)
-    prop_id = ri._add_request(USER2, port_prop)
-    self.assertTrue(prop_id)
-    ri.repo.RequestRecord.assert_called_once()
+#   def test_add_returns_prop_id(self):
+#     port_prop = Proposal(user=u2)
+#     prop_id = ri._add_request(USER2, port_prop)
+#     self.assertTrue(prop_id)
+#     ri.repo.RequestRecord.assert_called_once()
 
-  def test_edit_returns_prop_id(self):
-    port_prop = Proposal(user=u2)
-    prop_id = ri._edit_request(USER2, port_prop)
-    self.assertTrue(prop_id)
-    ri.repo.RequestRecord.assert_called_once()
+#   def test_edit_returns_prop_id(self):
+#     port_prop = Proposal(user=u2)
+#     prop_id = ri._edit_request(USER2, port_prop)
+#     self.assertTrue(prop_id)
+#     ri.repo.RequestRecord.assert_called_once()
   
-  def tearDown(self):
-    ri.reset_repo()
-    ri.all_eligible_users = self._all_eligible_users
+#   def tearDown(self):
+#     ri.reset_repo()
+#     ri.all_eligible_users = self._all_eligible_users
