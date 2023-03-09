@@ -109,6 +109,15 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(request.current, True)
     self.assertEqual(tuple(request.with_users), (rt.admin_id,))
 
+  def test_cancel_request(self):
+    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
+    requests = list(rg.current_requests(records=False))
+    self.assertEqual(len(requests), 1)
+    ri._cancel_request(USER3, requests[0].request_id)
+    edited_requests = list(rg.current_requests(records=False))
+    self.assertEqual(len(edited_requests), 0)
+  
   def test_edit_request(self):
     or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))
