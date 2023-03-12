@@ -94,7 +94,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(len(saved_requests), 1)
     request = saved_requests[0]
     self.assertTrue(request.or_group_id)
-    self.assertEqual(request.eformat.duration, prop.times[0].duration)
+    self.assertEqual(request.exchange_format.duration, prop.times[0].duration)
     self.assertEqual(request.expire_dt, prop.times[0].expire_date)
     self.assertEqual(request.user, prop.user.user_id)
     self.assertEqual(request.start_dt, prop.times[0].start_date)
@@ -146,7 +146,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertTrue(request_id0)
     requests[0].eligible = 0
     requests[0].eligible_users = [rt.admin_id]
-    requests[0].eformat.duration = 15
+    requests[0].exchange_format.duration = 15
     _prop = list(ri.requests_to_props(requests, USER3))[0]
     or_group_id1 = ri._edit_request(USER3, _prop)
     edited_requests = list(rg.current_requests(records=False))

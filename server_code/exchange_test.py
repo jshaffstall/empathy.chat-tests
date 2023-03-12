@@ -1,6 +1,7 @@
 import unittest
 from .misc_server_test import ADMIN, USER2
-from empathy_chat.exchanges import Exchange, Format
+from empathy_chat.exchanges import Exchange
+from empathy_chat.requests import ExchangeFormat
 from empathy_chat import exchange_interactor as ei
 from empathy_chat.exceptions import RowMissingError
 from anvil.tables import app_tables
@@ -49,7 +50,7 @@ class TestInitMatch(unittest.TestCase):
   def test_init_match_form_no_status(self):
     participants = [dict(user_id="1", present=0, slider_value=""),
                     dict(user_id="2", present=0, slider_value="")]
-    ei.repo = MockRepo(Exchange("eid", None, participants, False, None, Format(None), "1"))
+    ei.repo = MockRepo(Exchange("eid", None, participants, False, None, ExchangeFormat(None), "1"))
     self.assertEqual(ei.init_match_form(poptibo_id), 
                      (None, None, None, "")
                     )
@@ -57,7 +58,7 @@ class TestInitMatch(unittest.TestCase):
   def test_init_match_form_matched(self):
     participants = [dict(user_id=poptibo_id, present=0, slider_value=""),
                     dict(user_id=hugetim_id, present=0, slider_value="")]
-    e = Exchange("eid", "room code", participants, False, None, Format(45), poptibo_id)
+    e = Exchange("eid", "room code", participants, False, None, ExchangeFormat(45), poptibo_id)
     ei.repo = MockRepo(e)
     self.assertEqual(ei.init_match_form(poptibo_id), 
                      (None, "room code", 45, "")
@@ -72,7 +73,7 @@ class TestUpdateMatch(unittest.TestCase):
   def test_update_match_form_matched(self):
     participants = [dict(user_id=poptibo_id, present=0, slider_value=.2),
                     dict(user_id=hugetim_id, present=1, slider_value="", external=1, complete=0, late_notified=1)]
-    e = Exchange("eid", "room code", participants, False, now(), Format(45), poptibo_id)
+    e = Exchange("eid", "room code", participants, False, now(), ExchangeFormat(45), poptibo_id)
     ei.repo = MockRepo(e)
     self.assertEqual(ei.update_match_form(poptibo_id), 
                      dict(status="matched",
