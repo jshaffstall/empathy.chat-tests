@@ -52,6 +52,12 @@ class TestExchangeGateway(unittest.TestCase):
                ]:
       self.assertEqual(saved_exchange.participants[0][key], None)
 
+  def test_add_request_exchange_save(self):
+    prop1 = rt.prop_u2_2to3_in1hr_in2hr
+    prop2 = rt.prop_uA_2to2_in1hr
+    ri._add_request(USER2, prop1)
+    ri._add_request(ADMIN, prop2)
+  
   def tearDown(self):
     for rr in self.request_records_saved:
       rr._row.delete()
