@@ -93,6 +93,10 @@ db_schema:
     - name: complete_dt
       admin_ui: {width: 200}
       type: datetime
+    - name: request
+      admin_ui: {width: 200}
+      type: link_single
+      target: requests
   codes:
     title: Codes
     client: none
@@ -354,17 +358,24 @@ db_schema:
     - name: room_code
       admin_ui: {width: 200}
       type: string
-    - name: requests
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: requests
     - name: start_dt
       admin_ui: {width: 200}
       type: datetime
-    - name: Column3
+    - name: users
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: participants
       admin_ui: {width: 200}
       type: link_multiple
       target: participants
+    - name: current
+      admin_ui: {width: 200}
+      type: bool
+    - name: exchange_format
+      admin_ui: {width: 200}
+      type: link_single
+      target: exchange_formats
   stars:
     title: Stars
     client: none
