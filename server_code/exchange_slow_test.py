@@ -15,6 +15,7 @@ from empathy_chat import exchanges as es
 class TestExchangeGateway(unittest.TestCase):
   def setUp(self):
     self.request_records_saved = []
+    self.request_rows_created = []
     self.exchange_records_saved = []
     self.exchange_rows_created = []
   
@@ -55,12 +56,19 @@ class TestExchangeGateway(unittest.TestCase):
   def test_add_request_exchange_save(self):
     prop1 = rt.prop_u2_2to3_in1hr_in2hr
     prop2 = rt.prop_uA_2to2_in1hr
-    ri._add_request(USER2, prop1)
-    ri._add_request(ADMIN, prop2)
+    or_group1 = ri._add_request(USER2, prop1)
+    or_group2 = ri._add_request(ADMIN, prop2)
+    requests1 = list(app_tables.requests.search(or_group_id=or_group1))
+    requests2 = list(app_tables.requests.search(or_group_id=or_group2))
+    self.request_rows_created.extend(requests1 + requests2)
+    upcomings = list(eg.exchanges_by_user(USER2, records=True))
+    self.exchange_records_saved.append(upcomings[0])
+    
+    self.assertTrue(upcomings)
   
   def tearDown(self):
-    for rr in self.request_records_saved:
-      rr._row.delete()
+    for row in self.request_rows_created + [rr._row for rr in self.request_records_saved]:
+      row.delete()
     for row in self.exchange_rows_created + [er._row for er in self.exchange_records_saved]:
       for p_row in row['participants']:
         for a_row in p_row['appearances']:
