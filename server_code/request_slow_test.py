@@ -10,11 +10,13 @@ from empathy_chat import requests as rs
 from empathy_chat import server_misc as sm
 from empathy_chat import portable as port
 from empathy_chat import notifies as n
+from empathy_chat import invites
 
 
 class TestPropRequestProp(unittest.TestCase):
   def test_new_single_later_request(self):
     prop = rt.prop_u2_3to10_in1hr
+    prop.eligible_invites = invites.Invite(rel_to_inviter="father-in-law", link_key="123456")
     requests = tuple(rs.prop_to_requests(prop))
     _prop = list(ri.requests_to_props(requests, USER2))[0]
     self.assertTrue(_prop.prop_id)
@@ -27,6 +29,8 @@ class TestPropRequestProp(unittest.TestCase):
         for i, time in enumerate(_prop.times):
           for tkey in time.__dict__:
             self.assertEqual(getattr(time, tkey), getattr(prop.times[i], tkey))
+      elif key == 'eligible_invites':
+        self.assertEqual(str(getattr(_prop, key)), str(getattr(prop, key)))
       else:
         self.assertEqual(getattr(_prop, key), getattr(prop, key))
     # self.assertEqual(_prop, prop)
