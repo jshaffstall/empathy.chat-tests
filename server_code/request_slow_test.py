@@ -74,7 +74,7 @@ class TestPropRequestProp(unittest.TestCase):
 
 class TestRequestGateway(unittest.TestCase):
   def setUp(self):
-    self.request_records_created = []
+    self.request_records_saved = []
     self.request_rows_created = []
     self._email_send = n.email_send
     n.email_send = Mock()
@@ -87,7 +87,7 @@ class TestRequestGateway(unittest.TestCase):
     request_record = rg.RequestRecord(request)
     self.assertFalse(request_record.record_id)
     request_record.save()
-    self.request_records_created.append(request_record)
+    self.request_records_saved.append(request_record)
     self.assertTrue(request_record.record_id)
     saved_requests = [r for r in rg.requests_by_user(USER2) 
                       if r.request_id == request_record.record_id]
@@ -170,7 +170,7 @@ class TestRequestGateway(unittest.TestCase):
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u2.user_id]))
     request_record = rg.RequestRecord(request)
     request_record.save()
-    self.request_records_created.append(request_record)
+    self.request_records_saved.append(request_record)
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
     self.assertEqual(visible_requests[0].or_group_id, request.or_group_id)
@@ -181,14 +181,14 @@ class TestRequestGateway(unittest.TestCase):
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u3.user_id]))
     request_record = rg.RequestRecord(request)
     request_record.save()
-    self.request_records_created.append(request_record)
+    self.request_records_saved.append(request_record)
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertFalse(visible_requests)
   
   def tearDown(self):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
-    for rr in self.request_records_created:
+    for rr in self.request_records_saved:
       rr._row.delete()
     for row in self.request_rows_created:
       row.delete()
