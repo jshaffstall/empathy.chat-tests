@@ -8,6 +8,7 @@ from . import request_test as rt
 from empathy_chat import request_interactor as ri
 from empathy_chat import request_gateway as rg
 from empathy_chat import exchange_gateway as eg
+from empathy_chat import exchange_interactor as ei
 from empathy_chat import requests as rs
 from empathy_chat import server_misc as sm
 from empathy_chat import portable as port
@@ -66,9 +67,14 @@ class TestExchangeGateway(unittest.TestCase):
     self.assertFalse(row_2hr['current'])
     upcomings = list(eg.exchanges_by_user(USER2, records=True))
     self.exchange_records_saved.append(upcomings[0])
-    self.assertTrue(upcomings)
+    self.assertEqual(len(upcomings), 1)
+    match_dicts2 = ei.upcoming_match_dicts(USER2)
+    match_dictsA = ei.upcoming_match_dicts(ADMIN)
+    self.assertEqual(len(match_dicts2[0]), 4)
+    for key in match_dicts2[0]:
+      if key != 'port_users':
+        self.assertEqual(match_dicts2[0][key], match_dictsA[0][key])
     
-  
   def tearDown(self):
     for row in self.request_rows_created + [rr._row for rr in self.request_records_saved]:
       row.delete()
