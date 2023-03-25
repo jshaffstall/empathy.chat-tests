@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import Mock
+import datetime
 from anvil.tables import app_tables
 import anvil.tables.query as q
 from .misc_server_test import ADMIN, USER2, USER3
@@ -61,10 +62,12 @@ class TestExchangeGateway(unittest.TestCase):
     requests1 = list(app_tables.requests.search(or_group_id=or_group1))
     requests2 = list(app_tables.requests.search(or_group_id=or_group2))
     self.request_rows_created.extend(requests1 + requests2)
+    row_2hr = next((row for row in requests1 if row['start_dt'] - sm.now() > datetime.timedelta(hours=1.5)))
+    self.assertFalse(row_2hr['current'])
     upcomings = list(eg.exchanges_by_user(USER2, records=True))
     self.exchange_records_saved.append(upcomings[0])
-    
     self.assertTrue(upcomings)
+    
   
   def tearDown(self):
     for row in self.request_rows_created + [rr._row for rr in self.request_records_saved]:
