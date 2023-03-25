@@ -85,6 +85,8 @@ class TestRequestGateway(unittest.TestCase):
     n.email_send = Mock()
     self._send_sms = n.send_sms
     n.send_sms = Mock()
+    self._notify_edit = ri.RequestManager.notify_edit
+    ri.RequestManager.notify_edit = Mock()
   
   def test_request_record_save(self):
     prop = rt.prop_u2_3to10_in1hr
@@ -193,6 +195,7 @@ class TestRequestGateway(unittest.TestCase):
   def tearDown(self):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
+    ri.RequestManager.notify_edit = self._notify_edit
     for rr in self.request_records_saved:
       rr._row.delete()
     for row in self.request_rows_created:
