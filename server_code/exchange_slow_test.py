@@ -26,6 +26,8 @@ class TestExchangeGateway(unittest.TestCase):
     n.email_send = Mock()
     self._send_sms = n.send_sms
     n.send_sms = Mock()
+    self._notify_edit = ri.RequestManager.notify_edit
+    ri.RequestManager.notify_edit = Mock()
     self._ping = ri.ping
     ri.ping = Mock()
   
@@ -93,6 +95,7 @@ class TestExchangeGateway(unittest.TestCase):
   def tearDown(self):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
+    ri.RequestManager.notify_edit = self._notify_edit
     ri.ping = self._ping
     for row in self.request_rows_created + [rr._row for rr in self.request_records_saved]:
       row.delete()
