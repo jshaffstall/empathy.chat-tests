@@ -117,7 +117,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(tuple(request.with_users), (rt.admin_id,))
 
   def test_cancel_request(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
@@ -126,7 +126,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(len(edited_requests), 0)
   
   def test_edit_request(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
     self.assertEqual(requests[0].max_size, 10)
@@ -145,7 +145,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(edited_requests[0].max_size, 3)
 
   def test_edit_request_change_eligible(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
@@ -164,15 +164,15 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
   
   def test_visible_requests(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
-    or_group_id1 = ri._add_request(ADMIN, rt.prop_uA_2to2_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id1 = ri.add_request(ADMIN, rt.prop_uA_2to2_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0, or_group_id1)))
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
     self.assertEqual(visible_requests[0].or_group_id, or_group_id1)
 
   def test_visible_request_with(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u2.user_id]))
     request_record = rg.RequestRecord(request)
@@ -183,7 +183,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(visible_requests[0].or_group_id, request.or_group_id)
 
   def test_not_visible_request_with(self):
-    or_group_id0 = ri._add_request(USER3, rt.prop_u3_3to10_in1hr)
+    or_group_id0 = ri.add_request(USER3, rt.prop_u3_3to10_in1hr)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=q.any_of(or_group_id0)))
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u3.user_id]))
     request_record = rg.RequestRecord(request)

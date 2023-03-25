@@ -260,7 +260,7 @@ class TestPotentialMatches(unittest.TestCase):
 
 #   def test_add_returns_prop_id(self):
 #     port_prop = Proposal(user=u2)
-#     prop_id = ri._add_request(USER2, port_prop)
+#     prop_id = ri.add_request(USER2, port_prop)
 #     self.assertTrue(prop_id)
 #     ri.repo.RequestRecord.assert_called_once()
 

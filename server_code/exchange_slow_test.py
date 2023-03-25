@@ -69,10 +69,10 @@ class TestExchangeGateway(unittest.TestCase):
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_2to3_in1hr_in2hr
       prop2 = rt.prop_uA_2to2_in1hr
-      or_group1 = ri._add_request(USER2, prop1)
-      timer.check("1st _add_request")
-      or_group2 = ri._add_request(ADMIN, prop2)
-      timer.check("2nd _add_request")
+      or_group1 = ri.add_request(USER2, prop1)
+      timer.check("1st add_request")
+      or_group2 = ri.add_request(ADMIN, prop2)
+      timer.check("2nd add_request")
       requests = list(app_tables.requests.search(or_group_id=q.any_of(or_group1, or_group2)))
       self.request_rows_created.extend(requests)
       timer.check("grab request rows created")
