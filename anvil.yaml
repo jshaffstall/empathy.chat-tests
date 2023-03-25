@@ -81,7 +81,7 @@ db_schema:
       admin_ui: {width: 200}
       type: link_multiple
       target: appearances
-    - name: enter_dt
+    - name: entered_dt
       admin_ui: {width: 200}
       type: datetime
     - name: slider_value
@@ -361,6 +361,9 @@ db_schema:
     - name: start_dt
       admin_ui: {width: 200}
       type: datetime
+    - name: start_now
+      admin_ui: {width: 200}
+      type: bool
     - name: users
       admin_ui: {width: 200}
       type: link_multiple
@@ -578,6 +581,10 @@ db_schema:
     - name: eligible_starred
       admin_ui: {width: 200}
       type: bool
+    - name: eligible_invites
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: invites
   connections:
     title: Connections
     client: none

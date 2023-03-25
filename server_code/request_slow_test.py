@@ -34,6 +34,7 @@ class TestPropRequestProp(unittest.TestCase):
       else:
         self.assertEqual(getattr(_prop, key), getattr(prop, key))
     # self.assertEqual(_prop, prop)
+    prop.eligible_invites = [] # reseting
 
   def test_new_single_now_request(self):
     prop = rt.prop_u2_2to3_now
