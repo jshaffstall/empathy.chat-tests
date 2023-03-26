@@ -121,7 +121,7 @@ class TestRequestGateway(unittest.TestCase):
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
-    ri._cancel_request(USER3, requests[0].request_id)
+    ri.cancel_request(USER3, requests[0].request_id)
     edited_requests = list(rg.current_requests(records=False))
     self.assertEqual(len(edited_requests), 0)
   
@@ -134,7 +134,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertTrue(request_id0)
     requests[0].max_size = 3
     _prop = list(ri.requests_to_props(requests, USER3))[0]
-    or_group_id1 = ri._edit_request(USER3, _prop)
+    or_group_id1 = ri.edit_request(USER3, _prop)
     self.request_rows_created.extend(app_tables.requests.search(or_group_id=or_group_id0))
     edited_requests = list(rg.current_requests(records=False))
     request_id1 = edited_requests[0].request_id
@@ -155,7 +155,7 @@ class TestRequestGateway(unittest.TestCase):
     requests[0].eligible_users = [rt.admin_id]
     requests[0].exchange_format.duration = 15
     _prop = list(ri.requests_to_props(requests, USER3))[0]
-    or_group_id1 = ri._edit_request(USER3, _prop)
+    or_group_id1 = ri.edit_request(USER3, _prop)
     edited_requests = list(rg.current_requests(records=False))
     request_id1 = edited_requests[0].request_id
     self.assertEqual(or_group_id0, or_group_id1)
