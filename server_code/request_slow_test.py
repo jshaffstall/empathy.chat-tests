@@ -15,12 +15,12 @@ from empathy_chat import invites
 
 def add_request(user, port_prop):
   requests = rs.Requests(rs.prop_to_requests(port_prop, user_id=user.get_id()))
-  ri.add_requests(user, requests)
+  return ri.add_requests(user, requests)
 
 
 def edit_request(user, port_prop):
   requests = rs.Requests(rs.prop_to_requests(port_prop, user_id=user.get_id()))
-  ri.edit_requests(user, requests)
+  return ri.edit_requests(user, requests)
 
 
 class TestPropRequestProp(unittest.TestCase):

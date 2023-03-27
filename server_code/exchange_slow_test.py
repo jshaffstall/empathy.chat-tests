@@ -61,7 +61,7 @@ class TestExchangeGateway(unittest.TestCase):
     self.assertEqual(saved_exchange.participants[0]['appearances'], [])
     for key in ['entered_dt',
                 'slider_value',
-                'video_embedded',
+                'video_external',
                 'complete_dt',
                ]:
       self.assertEqual(saved_exchange.participants[0][key], None)
