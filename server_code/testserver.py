@@ -75,7 +75,7 @@ def test_add_request(user_id, port_prop):
 def accept_now_proposal(user_id):
   print("accept_now_proposal", user_id)
   if True: #anvil.users.get_user()['trust_level'] >= sm.TEST_TRUST_LEVEL:
-    tester = sm.get_other_user(ADMIN)
+    tester = ADMIN
     matcher.propagate_update_needed()
     tester_now_request = ri.now_request(tester)
     if tester_now_request:

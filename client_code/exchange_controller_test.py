@@ -32,7 +32,7 @@ class ExchangeControllerTest(unittest.TestCase):
   #   glob.name = save_glob_name
 
   def get_mock_server_without_my_slider_value(self):
-    mock_server = MockServer(return_values={'init_match_form': ("prop_id", "jitsi_code", 25, "")})
+    mock_server = MockServer(return_values={'init_match_form': ("prop_id", "jitsi_code", 25, None)})
     ec.server = mock_server
     return mock_server
   
@@ -83,7 +83,7 @@ class ExchangeControllerTest(unittest.TestCase):
                 their_name="",
                 message_items=[],
                 my_slider_value=3,
-                their_slider_value="",
+                their_slider_value=None,
                 their_external=False,
                 their_complete=False,
                )
