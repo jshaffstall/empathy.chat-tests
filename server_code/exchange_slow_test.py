@@ -5,6 +5,7 @@ from anvil.tables import app_tables
 import anvil.tables.query as q
 from .misc_server_test import ADMIN, USER2, USER3
 from . import request_test as rt
+from . import request_slow_test as rst
 from empathy_chat import request_interactor as ri
 from empathy_chat import request_gateway as rg
 from empathy_chat import exchange_gateway as eg
@@ -69,9 +70,9 @@ class TestExchangeGateway(unittest.TestCase):
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_2to3_in1hr_in2hr
       prop2 = rt.prop_uA_2to2_in1hr
-      or_group1 = ri.add_request(USER2, prop1)
+      or_group1 = rst.add_request(USER2, prop1)
       timer.check("1st add_request")
-      or_group2 = ri.add_request(ADMIN, prop2)
+      or_group2 = rst.add_request(ADMIN, prop2)
       timer.check("2nd add_request")
       requests = list(app_tables.requests.search(or_group_id=q.any_of(or_group1, or_group2)))
       self.request_rows_created.extend(requests)

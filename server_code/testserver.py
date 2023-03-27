@@ -10,6 +10,7 @@ from empathy_chat import matcher
 from empathy_chat import request_interactor as ri
 from empathy_chat import portable
 from .misc_server_test import ADMIN
+from . import request_slow_test as rst
 
 
 @anvil.server.callable
@@ -41,12 +42,12 @@ def test_add_user(em, level=1):
 
 
 @anvil.server.callable
-def test_add_request(user_id, port_prop):
+def test_add_proposal(user_id, port_prop):
   print("test_add_request", user_id)
   if True: #anvil.users.get_user()['trust_level'] >= sm.TEST_TRUST_LEVEL:
     user = sm.get_acting_user(user_id)
     matcher.propagate_update_needed()
-    prop_id = ri.add_request(user, port_prop)
+    prop_id = rst.add_request(user, port_prop)
     # new_prop = matcher.Proposal.get_by_id(prop_id)
     # if new_prop: 
     #   _add_prop_row_to_test_record(new_prop._row)

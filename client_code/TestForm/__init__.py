@@ -47,7 +47,7 @@ class TestForm(TestFormTemplate):
                   buttons=[])
       if user_id and out is True:
         proposal = content.proposal()
-        anvil.server.call('test_add_request', user_id, proposal)
+        anvil.server.call('test_add_proposal', user_id, proposal)
 
   def test_clear_click(self, **event_args):
     anvil.server.call('test_clear')
