@@ -70,6 +70,7 @@ class UserLoggedIn:
     glob.logged_in_user = user
     glob.logged_in_user_id = user.get_id()
     glob.trust_level = user['trust_level']
+    glob.default_request = user['default_request']
     return user
   def __exit__(self, exc_type, exc_value, exc_tb):
     anvil.users.logout()

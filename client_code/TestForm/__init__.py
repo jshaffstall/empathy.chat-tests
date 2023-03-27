@@ -66,8 +66,8 @@ class TestForm(TestFormTemplate):
   def autotest_butten_click(self, **event_args):
     """This method is called when the button is clicked"""
     user_id = self.test_requestuser_drop_down.selected_value
-    with UserLoggedIn(user_id):
-      auto_test.run_now_test()
+    # with UserLoggedIn(user_id):
+    #   auto_test.run_now_test()
 
   def slowtest_button_click(self, **event_args):
     """This method is called when the button is clicked"""
