@@ -128,15 +128,16 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(tuple(request.with_users), (rt.admin_id,))
 
   def test_cancel_request(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
     ri.cancel_request(USER3, requests[0].request_id)
     edited_requests = list(rg.current_requests(records=False))
     self.assertEqual(len(edited_requests), 0)
-    self.are_rows_to_delete = True
   
   def test_edit_request(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
@@ -153,9 +154,9 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(len(edited_requests), 1)
     self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
     self.assertEqual(edited_requests[0].max_size, 3)
-    self.are_rows_to_delete = True
 
   def test_edit_request_change_eligible(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     requests = list(rg.current_requests(records=False))
     self.assertEqual(len(requests), 1)
@@ -172,17 +173,17 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(request_id0, request_id1)
     self.assertEqual(len(edited_requests), 1)
     self.assertEqual(edited_requests[0].or_group_id, or_group_id1)
-    self.are_rows_to_delete = True
   
   def test_visible_requests(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     or_group_id1 = add_request(ADMIN, rt.prop_uA_2to2_in1hr)
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
     self.assertEqual(visible_requests[0].or_group_id, or_group_id1)
-    self.are_rows_to_delete = True
 
   def test_visible_request_with(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u2.user_id]))
     request_record = rg.RequestRecord(request)
@@ -190,16 +191,15 @@ class TestRequestGateway(unittest.TestCase):
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertEqual(len(visible_requests), 1)
     self.assertEqual(visible_requests[0].or_group_id, request.or_group_id)
-    self.are_rows_to_delete = True
 
   def test_not_visible_request_with(self):
+    self.are_rows_to_delete = True
     or_group_id0 = add_request(USER3, rt.prop_u3_3to10_in1hr)
     request = next(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.u3.user_id]))
     request_record = rg.RequestRecord(request)
     request_record.save()
     visible_requests = ri.current_visible_requests(USER2, list(rg.current_requests(records=True)))
     self.assertFalse(visible_requests)
-    self.are_rows_to_delete = True
   
   def tearDown(self):
     n.email_send = self._email_send

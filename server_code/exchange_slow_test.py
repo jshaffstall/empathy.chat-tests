@@ -20,9 +20,9 @@ from anvil_extras.logging import TimerLogger
 class TestExchangeGateway(unittest.TestCase):
   def setUp(self):
     self.request_records_saved = []
-    self.request_rows_created = []
     self.exchange_records_saved = []
-    self.exchange_rows_created = []
+    self.are_request_rows_to_delete = False
+    self.test_start_dt = sm.now()
     self._email_send = n.email_send
     n.email_send = Mock()
     self._send_sms = n.send_sms
@@ -36,14 +36,14 @@ class TestExchangeGateway(unittest.TestCase):
     prop = rt.prop_u2_2to3_now
     request = next(rs.prop_to_requests(prop))
     request_record = rg.RequestRecord(request)
-    request_record.save()
     self.request_records_saved.append(request_record)
+    request_record.save()
     request.request_id = request_record.record_id
     exchange = es.Exchange.from_exchange_prospect(rs.ExchangeProspect([request]))
     exchange_record = eg.ExchangeRecord(exchange)
     self.assertFalse(exchange_record.record_id)
-    exchange_record.save()
     self.exchange_records_saved.append(exchange_record)
+    exchange_record.save()
     self.assertTrue(exchange_record.record_id)
     exchange.exchange_id = exchange_record.record_id
     saved_exchange = eg.ExchangeRecord.from_id(exchange_record.record_id).entity
@@ -67,6 +67,7 @@ class TestExchangeGateway(unittest.TestCase):
     self.assertTrue(saved_exchange.participants[0]['entered_dt']) # b/c quick-ping now request
 
   def test_add_request_exchange_save(self):
+    self.are_request_rows_to_delete = True
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_2to3_in1hr_in2hr
       prop2 = rt.prop_uA_2to2_in1hr
@@ -75,7 +76,6 @@ class TestExchangeGateway(unittest.TestCase):
       or_group2 = rst.add_request(ADMIN, prop2)
       timer.check("2nd add_request")
       requests = list(app_tables.requests.search(or_group_id=q.any_of(or_group1, or_group2)))
-      self.request_rows_created.extend(requests)
       timer.check("grab request rows created")
       row_2hr = next((row for row in requests 
                       if row['start_dt'] - sm.now() > datetime.timedelta(hours=1.5)))
@@ -98,11 +98,15 @@ class TestExchangeGateway(unittest.TestCase):
     n.send_sms = self._send_sms
     ri.RequestManager.notify_edit = self._notify_edit
     ri.ping = self._ping
-    for row in self.request_rows_created + [rr._row for rr in self.request_records_saved]:
+    for row in [rr._row for rr in self.request_records_saved]:
       row.delete()
-    for row in self.exchange_rows_created + [er._row for er in self.exchange_records_saved]:
+    for row in [er._row for er in self.exchange_records_saved]:
       for p_row in row['participants']:
         for a_row in p_row['appearances']:
           a_row.delete()
         p_row.delete()
       row.delete()
+    if self.are_request_rows_to_delete:
+      rows_created = app_tables.requests.search(create_dt=q.greater_than_or_equal_to(self.test_start_dt))
+      for row in rows_created:
+        row.delete()
