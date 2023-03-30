@@ -59,12 +59,12 @@ class TestExchangeGateway(unittest.TestCase):
                ]:
       self.assertEqual(exchange.participants[0][key], saved_exchange.participants[0][key])
     self.assertEqual(saved_exchange.participants[0]['appearances'], [])
-    for key in ['entered_dt',
-                'slider_value',
+    for key in ['slider_value',
                 'video_external',
                 'complete_dt',
                ]:
       self.assertEqual(saved_exchange.participants[0][key], None)
+    self.assertTrue(saved_exchange.participants[0]['entered_dt']) # b/c quick-ping now request
 
   def test_add_request_exchange_save(self):
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
