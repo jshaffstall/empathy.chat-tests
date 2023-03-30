@@ -107,6 +107,6 @@ class TestExchangeGateway(unittest.TestCase):
         p_row.delete()
       row.delete()
     if self.are_request_rows_to_delete:
-      rows_created = app_tables.requests.search(create_dt=q.greater_than_or_equal_to(self.test_start_dt))
+      rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
       for row in rows_created:
         row.delete()

@@ -208,6 +208,6 @@ class TestRequestGateway(unittest.TestCase):
     for rr in self.request_records_saved:
       rr._row.delete()
     if self.are_rows_to_delete:
-      rows_created = app_tables.requests.search(create_dt=q.greater_than_or_equal_to(self.test_start_dt))
+      rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
       for row in rows_created:
         row.delete()
