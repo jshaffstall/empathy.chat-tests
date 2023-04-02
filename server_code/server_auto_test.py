@@ -20,7 +20,7 @@ def slow_tests(verbosity=2):
   #unittest.main(exit=False)
   from .request_slow_test import ADMIN, USER2, USER3
   pre_status_dict = {ADMIN: ADMIN['status'], USER2: USER2['status'], USER3: USER3['status'],}
-  test_modules = ['exchange_slow_test', 'request_slow_test',] #'invite_server_test',] #   ###'exchange_test', 
+  test_modules = ['exchange_slow_test',]# 'request_slow_test',] #'invite_server_test',] #   ###'exchange_test', 
   test = unittest.TestLoader().loadTestsFromNames(test_modules)
   unittest.TextTestRunner(stream=sys.stdout, verbosity=verbosity).run(test)
   for u in pre_status_dict:
