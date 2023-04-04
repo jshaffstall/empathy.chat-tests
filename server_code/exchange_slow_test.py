@@ -92,6 +92,24 @@ class TestExchangeGateway(unittest.TestCase):
       for key in match_dicts2[0]:
         if key != 'port_users':
           self.assertEqual(match_dicts2[0][key], match_dictsA[0][key])
+
+  def test_add_request_no_exchange(self):
+    self.are_request_rows_to_delete = True
+    prop1 = rt.prop_u2_2to3_in1hr_in2hr
+    prop2 = rt.prop_uA_2to2_in1hr
+    requests2 = rs.Requests(rs.prop_to_requests(prop2, user_id=ADMIN.get_id()))
+    requests2.eligible = 0
+    requests2.eligible_users = []
+    requests2.eligible_starred = False
+    or_group1 = rst.add_request(USER2, prop1)
+    or_group2 = ri.add_requests(ADMIN, requests2)
+    requests = list(app_tables.requests.search(or_group_id=q.any_of(or_group1, or_group2)))
+    row_2hr = next((row for row in requests 
+                    if row['start_dt'] - sm.now() > datetime.timedelta(hours=1.5)))
+    self.assertTrue(row_2hr['current'])
+    upcomings = list(eg.exchanges_by_user(USER2, records=True))
+    self.exchange_records_saved.append(upcomings[0])
+    self.assertFalse(len(upcomings), 1)
     
   def tearDown(self):
     n.email_send = self._email_send

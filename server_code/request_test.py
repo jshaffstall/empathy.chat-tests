@@ -54,7 +54,7 @@ prop_uA_2to3_now = Proposal(
   eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[ProposalTime(start_now=True)],
 )
-prop_uA_2to2_in1hr_size3 = Proposal(
+prop_uA_2to3_in1hr = Proposal(
   user=uA, min_size=2, max_size=3,
   eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
@@ -199,7 +199,7 @@ class TestPotentialMatches(unittest.TestCase):
 
   def test_new_later_requests_size3_match(self):
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
                   + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
@@ -207,7 +207,7 @@ class TestPotentialMatches(unittest.TestCase):
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
-    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
                   + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr))
                   + tuple(rs.prop_to_requests(prop_uA_2to2_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
@@ -216,7 +216,7 @@ class TestPotentialMatches(unittest.TestCase):
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
-    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
                   + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
@@ -224,7 +224,7 @@ class TestPotentialMatches(unittest.TestCase):
                      rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
-    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr_size3))
+    o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
                   + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr))
                   + tuple(rs.prop_to_requests(prop_uA_2to2_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
