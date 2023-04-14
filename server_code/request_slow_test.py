@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 from anvil.tables import app_tables
 import anvil.tables.query as q
+import anvil.tables
 from .misc_server_test import ADMIN, USER2, USER3
 from . import request_test as rt
 from empathy_chat import request_interactor as ri
@@ -205,9 +206,11 @@ class TestRequestGateway(unittest.TestCase):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
     ri.RequestManager.notify_edit = self._notify_edit
-    for rr in self.request_records_saved:
-      rr._row.delete()
     if self.are_rows_to_delete:
       rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
-      for row in rows_created:
-        row.delete()
+    with anvil.tables.batch_delete:
+      for rr in self.request_records_saved:
+        rr._row.delete()
+      if self.are_rows_to_delete:
+        for row in rows_created:
+          row.delete()

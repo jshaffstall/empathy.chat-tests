@@ -3,6 +3,7 @@ from unittest.mock import Mock
 import datetime
 from anvil.tables import app_tables
 import anvil.tables.query as q
+import anvil.tables
 from .misc_server_test import ADMIN, USER2, USER3
 from . import request_test as rt
 from . import request_slow_test as rst
@@ -117,15 +118,17 @@ class TestExchangeGateway(unittest.TestCase):
     n.send_sms = self._send_sms
     ri.RequestManager.notify_edit = self._notify_edit
     ri.ping = self._ping
-    for row in [rr._row for rr in self.request_records_saved]:
-      row.delete()
-    for row in [er._row for er in self.exchange_records_saved]:
-      for p_row in row['participants']:
-        for a_row in p_row['appearances']:
-          a_row.delete()
-        p_row.delete()
-      row.delete()
     if self.are_request_rows_to_delete:
       rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
-      for row in rows_created:
+    with anvil.tables.batch_delete:
+      for row in [rr._row for rr in self.request_records_saved]:
         row.delete()
+      for row in [er._row for er in self.exchange_records_saved]:
+        for p_row in row['participants']:
+          for a_row in p_row['appearances']:
+            a_row.delete()
+          p_row.delete()
+        row.delete()
+      if self.are_request_rows_to_delete:
+        for row in rows_created:
+          row.delete()
