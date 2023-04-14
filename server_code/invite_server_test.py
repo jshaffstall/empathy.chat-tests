@@ -192,7 +192,8 @@ class InviteConnectTest(unittest.TestCase):
   def tearDown(self):
     anvil.users.force_login(ADMIN)
     test_invites = app_tables.invites.search(user1=q.any_of(ADMIN, USER2), date=q.greater_than_or_equal_to(self.start_time))
-    for test_invite in test_invites:
-      test_invite.delete()
+    with anvil.tables.batch_delete:
+      for test_invite in test_invites:
+        test_invite.delete()
     USER2['phone'] = self.phone_store
     
