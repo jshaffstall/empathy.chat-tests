@@ -73,10 +73,16 @@ db_schema:
     client: none
     server: full
     columns:
+    - name: entered_dt
+      admin_ui: {width: 200}
+      type: datetime
     - name: user
       admin_ui: {width: 200}
       type: link_single
       target: users
+    - name: complete_dt
+      admin_ui: {width: 200}
+      type: datetime
     - name: appearances
       admin_ui: {width: 200}
       type: link_multiple
@@ -84,18 +90,12 @@ db_schema:
     - name: late_notified
       admin_ui: {width: 200}
       type: bool
-    - name: entered_dt
-      admin_ui: {width: 200}
-      type: datetime
     - name: slider_value
       admin_ui: {width: 200}
       type: number
     - name: video_external
       admin_ui: {width: 200}
       type: bool
-    - name: complete_dt
-      admin_ui: {width: 200}
-      type: datetime
     - name: request
       admin_ui: {width: 200}
       type: link_single
@@ -364,6 +364,9 @@ db_schema:
     - name: start_dt
       admin_ui: {width: 200}
       type: datetime
+    - name: current
+      admin_ui: {width: 200}
+      type: bool
     - name: start_now
       admin_ui: {width: 200}
       type: bool
@@ -375,9 +378,6 @@ db_schema:
       admin_ui: {width: 200}
       type: link_multiple
       target: participants
-    - name: current
-      admin_ui: {width: 200}
-      type: bool
     - name: exchange_format
       admin_ui: {width: 200}
       type: link_single
@@ -465,7 +465,7 @@ db_schema:
       admin_ui: {width: 200}
       type: simpleObject
   exchange_formats:
-    title: Exchange_Formats
+    title: Exchange Formats
     client: none
     server: full
     columns:
