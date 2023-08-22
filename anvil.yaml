@@ -1,6 +1,6 @@
 dependencies:
 - app_id: E6HFYSK4HHRI7BTC
-  version: {version_tag: v0.9.11a}
+  version: {dev: true}
 - app_id: C6ZZPAPN4YYF5NVJ
   version: {version_tag: v2.1.3}
 services:
