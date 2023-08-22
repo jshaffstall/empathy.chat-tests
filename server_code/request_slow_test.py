@@ -214,3 +214,11 @@ class TestRequestGateway(unittest.TestCase):
       if self.are_rows_to_delete:
         for row in rows_created:
           row.delete()
+
+
+class TestExchangeProspectMisc(unittest.TestCase):
+  def test_exchange_prospects_to_props(self):
+    new_requests = tuple(rs.prop_to_requests(rt.prop_u2_2to3_in1hr_in2hr, with_users=[rt.admin_id]))
+    o_requests = tuple(rs.prop_to_requests(rt.prop_uA_2to2_in1hr, with_users=[rt.user2_id]))
+    ep = rs.ExchangeProspect({new_requests[0], o_requests[0]})
+    self.assertEqual(ri.eps_to_props([ep], USER2).user_id, rt.user2_id)

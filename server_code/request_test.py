@@ -242,7 +242,7 @@ class TestPotentialMatches(unittest.TestCase):
     self.assertEqual(len(potential_matches), 1)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
                      rs.ExchangeProspect({new_requests[0], o_requests[0]}))
-    
+
 # def _mock_save_requests(requests):
 #   for r in requests:
 #     r.or_group_id = 11
