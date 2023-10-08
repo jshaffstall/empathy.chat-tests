@@ -30,8 +30,8 @@ class TestExchangeGateway(unittest.TestCase):
     n.send_sms = Mock()
     self._notify_edit = ri.RequestManager.notify_edit
     ri.RequestManager.notify_edit = Mock()
-    self._ping = ri.ping
-    ri.ping = Mock()
+    self._ping = ei.ping
+    ei.ping = Mock()
   
   def test_exchange_record_save(self):
     prop = rt.prop_u2_2to3_now
@@ -117,7 +117,7 @@ class TestExchangeGateway(unittest.TestCase):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
     ri.RequestManager.notify_edit = self._notify_edit
-    ri.ping = self._ping
+    ei.ping = self._ping
     if self.are_request_rows_to_delete:
       rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
     with anvil.tables.batch_delete:
