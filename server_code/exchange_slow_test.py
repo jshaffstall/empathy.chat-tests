@@ -89,7 +89,7 @@ class TestExchangeGateway(unittest.TestCase):
       match_dicts2 = ei.upcoming_match_dicts(USER2)
       match_dictsA = ei.upcoming_match_dicts(ADMIN)
       timer.check("grab match_dicts")
-      self.assertEqual(len(match_dicts2[0]), 4)
+      self.assertEqual(len(match_dicts2[0]), 5)
       for key in match_dicts2[0]:
         if key != 'port_users':
           self.assertEqual(match_dicts2[0][key], match_dictsA[0][key])
