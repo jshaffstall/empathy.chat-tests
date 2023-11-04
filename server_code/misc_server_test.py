@@ -15,7 +15,7 @@ from empathy_chat import notifies as n
 ADMIN = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
 USER2 = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
 USER3 = app_tables.users.get(email=secrets.get_secret('test_user3_email'))
-print(f"USER2: {secrets.get_secret('test_user2_email')}, USER3: {secrets.get_secret('test_user3_email')}")
+
 
 def name_mock(user, to_user):
   return user

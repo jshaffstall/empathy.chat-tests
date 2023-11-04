@@ -1,3 +1,4 @@
+import anvil.secrets as secrets
 import anvil.server
 import sys
 import unittest
@@ -19,6 +20,7 @@ def server_auto_tests(verbosity=1):
 def slow_tests(verbosity=2):
   #unittest.main(exit=False)
   from .request_slow_test import ADMIN, USER2, USER3
+  print(f"USER2: {secrets.get_secret('test_user2_email')}, USER3: {secrets.get_secret('test_user3_email')}")
   pre_status_dict = {ADMIN: ADMIN['status'], USER2: USER2['status'], USER3: USER3['status'],}
   test_modules = ['exchange_slow_test', 'request_slow_test',] # 'invite_server_test',] #   ###'exchange_test', 
   test = unittest.TestLoader().loadTestsFromNames(test_modules)
