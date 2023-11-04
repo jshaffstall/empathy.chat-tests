@@ -464,6 +464,18 @@ db_schema:
     - name: external
       admin_ui: {width: 200}
       type: simpleObject
+  exchange_prospects:
+    title: Exchange Prospects
+    client: none
+    server: full
+    columns:
+    - name: requests
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: requests
+    - name: distances
+      admin_ui: {width: 200}
+      type: simpleObject
   exchange_formats:
     title: Exchange Formats
     client: none
