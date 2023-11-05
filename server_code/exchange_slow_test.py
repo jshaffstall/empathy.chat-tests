@@ -83,7 +83,7 @@ class TestExchangeGateway(unittest.TestCase):
       self.assertFalse(row_2hr['current'])
       timer.check("check row_2hr")
       upcomings = list(eg.exchanges_by_user(USER2, records=True))
-      self.exchange_records_saved.append(upcomings[0])
+      self.exchange_records_saved.extend(upcomings)
       self.assertEqual(len(upcomings), 1)
       timer.check("grab upcomings")
       match_dicts2 = ei.upcoming_match_dicts(USER2)
