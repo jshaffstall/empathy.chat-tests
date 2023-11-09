@@ -185,14 +185,14 @@ class TestPotentialMatches(unittest.TestCase):
   def test_new_later_requests_match(self):
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr, with_users=[admin_id]))
     o_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr, with_users=[user2_id]))
-    ep = rs.ExchangeProspect({new_requests[0], o_requests[0]})
+    ep = rs.ExchangeProspect({new_requests[0], o_requests[0]}, temp=True)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests), ep)
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     o_requests = (tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
                   + tuple(rs.prop_to_requests(prop_u3_3to10_in1hr)))
     potential_matches = rs.potential_matches(new_requests, o_requests)
-    self.assertIn(rs.ExchangeProspect({new_requests[0], o_requests[1]}),
+    self.assertIn(rs.ExchangeProspect({new_requests[0], o_requests[1]}, temp=True),
                   potential_matches)
     self.assertEqual(len(potential_matches), 1)
     self.assertFalse(rs.exchange_to_save(new_requests, o_requests))
@@ -204,7 +204,7 @@ class TestPotentialMatches(unittest.TestCase):
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
+                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}, temp=True))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_3to10_in1hr))
     o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
@@ -213,7 +213,7 @@ class TestPotentialMatches(unittest.TestCase):
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
+                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}, temp=True))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
@@ -221,7 +221,7 @@ class TestPotentialMatches(unittest.TestCase):
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 3)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
+                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}, temp=True))
 
     new_requests = tuple(rs.prop_to_requests(prop_u2_2to3_in1hr_in2hr))
     o_requests = (tuple(rs.prop_to_requests(prop_uA_2to3_in1hr))
@@ -230,7 +230,7 @@ class TestPotentialMatches(unittest.TestCase):
     potential_matches = rs.potential_matches(new_requests, o_requests)
     self.assertEqual(len(potential_matches), 4)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}))
+                     rs.ExchangeProspect({new_requests[0], o_requests[0], o_requests[1]}, temp=True))
 
   def test_new_later_requests_no_size3_match(self):
     new_requests = tuple(rs.prop_to_requests(prop_uA_2to2_in1hr))
@@ -241,7 +241,7 @@ class TestPotentialMatches(unittest.TestCase):
                      potential_matches)
     self.assertEqual(len(potential_matches), 1)
     self.assertEqual(rs.exchange_to_save(new_requests, o_requests),
-                     rs.ExchangeProspect({new_requests[0], o_requests[0]}))
+                     rs.ExchangeProspect({new_requests[0], o_requests[0]}, temp=True))
 
 # def _mock_save_requests(requests):
 #   for r in requests:
