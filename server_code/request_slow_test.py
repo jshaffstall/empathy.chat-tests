@@ -120,6 +120,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(request.create_dt, request.edit_dt)
     self.assertEqual(request.min_size, prop.min_size)
     self.assertEqual(request.max_size, prop.max_size)
+    self.assertEqual(request.eligible_all, prop.eligible_all)
     self.assertEqual(request.eligible, prop.eligible)
     self.assertEqual(request.eligible_users, [pu.user_id for pu in prop.eligible_users])
     self.assertEqual(request.eligible_groups, prop.eligible_groups)
