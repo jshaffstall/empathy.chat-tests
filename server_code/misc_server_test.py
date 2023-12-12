@@ -12,9 +12,8 @@ from empathy_chat import server_misc as sm
 from empathy_chat import notifies as n
 
 
-ADMIN = app_tables.users.get(email=secrets.get_secret('admin_email')) #anvil.users.get_user()
-USER2 = app_tables.users.get(email=secrets.get_secret('test_user2_email'))
-USER3 = app_tables.users.get(email=secrets.get_secret('test_user3_email'))
+test_users = app_tables.users.search(email=q.any_of(*[secrets.get_secret(key) for key in ('admin_email', 'test_user2_email', 'test_user3_email')]))
+(ADMIN, USER2, USER3) = [next((u for u in test_users if u['email'] == secrets.get_secret(key))) for key in ('admin_email', 'test_user2_email', 'test_user3_email')]
 
 
 def name_mock(user, to_user):
