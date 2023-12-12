@@ -85,12 +85,20 @@ components:
       name: test_requestuser_drop_down
     - type: Button
       properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
-        foreground: '', visible: true, text: Add Proposal, font_size: null, font: '',
+        foreground: '', visible: true, text: Add NOW Proposal, font_size: null, font: '',
         spacing_above: small, icon_align: left, spacing_below: small, italic: false,
         background: '', bold: false, underline: false, icon: ''}
       layout_properties: {grid_position: 'MDYDAL,UHDJZK'}
       event_bindings: {click: test_proposal_button_click}
       name: test_proposal_button
+    - name: test_later_proposal_button
+      properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
+        foreground: '', visible: true, text: Add LATER Proposal, font_size: null,
+        font: '', spacing_above: small, icon_align: left, spacing_below: small, italic: false,
+        background: '', bold: false, underline: false, icon: ''}
+      type: Button
+      layout_properties: {grid_position: 'YLFOJN,JIHVCL'}
+      event_bindings: {click: test_proposal_button_click}
     - type: Button
       properties: {role: null, align: center, tooltip: '', border: '', enabled: true,
         foreground: '', visible: true, text: Copy New Close Invite Link, font_size: null,

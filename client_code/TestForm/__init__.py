@@ -34,10 +34,11 @@ class TestForm(TestFormTemplate):
       alert("Email address required to add user.")
 
   def test_proposal_button_click(self, **event_args):
+    start_now = event_args['sender'] != self.test_later_proposal_button
     user_id = self.test_requestuser_drop_down.selected_value
     with UserLoggedIn(user_id):
       glob.populate_lazy_vars()
-      form_item = t.Proposal().create_form_item()
+      form_item = t.Proposal(times=[t.ProposalTime(start_now=start_now)]).create_form_item()
       content = CreateForm(item=form_item)
       self.proposal_alert = content
       out = alert(content=self.proposal_alert,
