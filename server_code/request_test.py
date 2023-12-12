@@ -23,30 +23,30 @@ u2 = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
 prop_u2_3to10_in1hr = Proposal(
   user=u2, min_size=3, max_size=10, 
-  eligible_all=False, eligible=2, eligible_users=[port.User(user_id=user3_id)], eligible_groups=[group0], eligible_starred=True,
+  eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[time1],
 )
 time2 = ProposalTime(start_date=time1.start_date + port.DEFAULT_NEXT_DELTA)
 prop_u2_2to3_in1hr_in2hr = Proposal(
   user=u2, min_size=2, max_size=3,
-  eligible_all=False, eligible=2, eligible_users=[port.User(user_id=user3_id)], eligible_groups=[group0], eligible_starred=True,
+  eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[time1, time2],
 )
 prop_u2_2to3_now = Proposal(
   user=u2, min_size=2, max_size=3,
-  eligible_all=False, eligible=2, eligible_users=[port.User(user_id=user3_id)], eligible_groups=[group0], eligible_starred=True,
+  eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[ProposalTime(start_now=True)]
 )
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
 prop_uA_3to10_in1hr = Proposal(
   user=uA, min_size=3, max_size=10,
-  eligible_all=False, eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
+  eligible_all=False, eligible=2, eligible_users=[user2_id], eligible_groups=[], eligible_starred=True,
   times=[ProposalTime(duration=15)]
 )
 prop_uA_2to2_in1hr = Proposal(
   user=uA, min_size=2, max_size=2,
-  eligible_all=False, eligible=2, eligible_users=[u2], eligible_groups=[], eligible_starred=True,
+  eligible_all=False, eligible=2, eligible_users=[user2_id], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 prop_uA_2to3_now = Proposal(

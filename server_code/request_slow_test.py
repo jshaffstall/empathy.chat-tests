@@ -34,7 +34,7 @@ class TestPropRequestProp(unittest.TestCase):
     _prop.prop_id = None
     # for proptime in _prop.times:
     #   proptime.proptime_id = None
-    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    # _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
     for key in _prop.__dict__:
       if key == 'times':
         for i, time in enumerate(_prop.times):
@@ -55,7 +55,7 @@ class TestPropRequestProp(unittest.TestCase):
     _prop.prop_id = None
     # for proptime in _prop.times:
     #   proptime.proptime_id = None
-    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    # _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
     for key in _prop.__dict__:
       if key == 'times':
         for i, time in enumerate(_prop.times):
@@ -77,7 +77,7 @@ class TestPropRequestProp(unittest.TestCase):
     _prop.prop_id = None
     # for proptime in _prop.times:
     #   proptime.proptime_id = None
-    _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
+    # _prop.eligible_users = [port.User(user_id=u.user_id) for u in _prop.eligible_users]
     for key in _prop.__dict__:
       if key == 'times':
         for i, time in enumerate(_prop.times):
@@ -122,7 +122,7 @@ class TestRequestGateway(unittest.TestCase):
     self.assertEqual(request.max_size, prop.max_size)
     self.assertEqual(request.eligible_all, prop.eligible_all)
     self.assertEqual(request.eligible, prop.eligible)
-    self.assertEqual(request.eligible_users, [pu.user_id for pu in prop.eligible_users])
+    self.assertEqual(request.eligible_users, prop.eligible_users)
     self.assertEqual(request.eligible_groups, prop.eligible_groups)
     self.assertEqual(request.eligible_starred, prop.eligible_starred)
     self.assertEqual(request.pref_order, 0)
