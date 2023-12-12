@@ -22,47 +22,47 @@ group0 = groups.Group(group0_row['name'], group_id=group0_row.get_id())
 u2 = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
 prop_u2_3to10_in1hr = Proposal(
-  user=u2, min_size=3, max_size=10, 
+  user=user2_id, min_size=3, max_size=10, 
   eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[time1],
 )
 time2 = ProposalTime(start_date=time1.start_date + port.DEFAULT_NEXT_DELTA)
 prop_u2_2to3_in1hr_in2hr = Proposal(
-  user=u2, min_size=2, max_size=3,
+  user=user2_id, min_size=2, max_size=3,
   eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[time1, time2],
 )
 prop_u2_2to3_now = Proposal(
-  user=u2, min_size=2, max_size=3,
+  user=user2_id, min_size=2, max_size=3,
   eligible_all=False, eligible=2, eligible_users=[user3_id], eligible_groups=[group0], eligible_starred=True,
   times=[ProposalTime(start_now=True)]
 )
 
 uA = sm.get_port_user(ADMIN, distance=0, simple=True)
 prop_uA_3to10_in1hr = Proposal(
-  user=uA, min_size=3, max_size=10,
+  user=admin_id, min_size=3, max_size=10,
   eligible_all=False, eligible=2, eligible_users=[user2_id], eligible_groups=[], eligible_starred=True,
   times=[ProposalTime(duration=15)]
 )
 prop_uA_2to2_in1hr = Proposal(
-  user=uA, min_size=2, max_size=2,
+  user=admin_id, min_size=2, max_size=2,
   eligible_all=False, eligible=2, eligible_users=[user2_id], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 prop_uA_2to3_now = Proposal(
-  user=uA, min_size=2, max_size=3,
+  user=admin_id, min_size=2, max_size=3,
   eligible_all=False, eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[ProposalTime(start_now=True)],
 )
 prop_uA_2to3_in1hr = Proposal(
-  user=uA, min_size=2, max_size=3,
+  user=admin_id, min_size=2, max_size=3,
   eligible_all=False, eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
 
 u3 = sm.get_port_user(USER3, distance=0, simple=True)
 prop_u3_3to10_in1hr = Proposal(
-  user=u3, min_size=3, max_size=10,
+  user=user3_id, min_size=3, max_size=10,
   eligible_all=False, eligible=2, eligible_users=[], eligible_groups=[], eligible_starred=True,
   times=[time1],
 )
@@ -79,7 +79,7 @@ class TestNewRequests(unittest.TestCase):
     self.assertTrue(request.or_group_id)
     self.assertEqual(request.exchange_format.duration, prop.times[0].duration)
     self.assertEqual(request.expire_dt, prop.times[0].expire_date)
-    self.assertEqual(request.user, prop.user.user_id)
+    self.assertEqual(request.user, prop.user)
     self.assertEqual(request.start_dt, prop.times[0].start_date)
     self.assertEqual(request.create_dt, request.edit_dt)
     self.assertEqual(request.min_size, prop.min_size)
@@ -101,7 +101,7 @@ class TestNewRequests(unittest.TestCase):
     self.assertTrue(request.or_group_id)
     self.assertEqual(request.exchange_format.duration, prop.times[0].duration)
     self.assertEqual(request.expire_dt, request.start_dt + timedelta(seconds=p.WAIT_SECONDS))
-    self.assertEqual(request.user, prop.user.user_id)
+    self.assertEqual(request.user, prop.user)
     self.assertTrue(request.start_dt <= sm.now())
     self.assertEqual(request.create_dt, request.edit_dt)
     self.assertEqual(request.min_size, prop.min_size)
@@ -122,7 +122,7 @@ class TestNewRequests(unittest.TestCase):
       self.assertTrue(request.or_group_id)
       self.assertEqual(request.exchange_format.duration, prop.times[i].duration)
       self.assertEqual(request.expire_dt, prop.times[i].expire_date)
-      self.assertEqual(request.user, prop.user.user_id)
+      self.assertEqual(request.user, prop.user)
       self.assertEqual(request.start_dt, prop.times[i].start_date)
       self.assertEqual(request.create_dt, request.edit_dt)
       self.assertEqual(request.min_size, prop.min_size)

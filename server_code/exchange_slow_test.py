@@ -93,7 +93,7 @@ class TestExchangeGateway(unittest.TestCase):
       self.assertEqual(len(match_dicts2), 1)
       self.assertEqual(len(match_dicts2), len(match_dictsA))
       for key in match_dicts2[0]:
-        if key != 'port_users':
+        if key != 'other_user_ids':
           self.assertEqual(match_dicts2[0][key], match_dictsA[0][key])
 
   def test_add_request_no_exchange(self):
