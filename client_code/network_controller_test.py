@@ -14,11 +14,11 @@ glob.connections = [
   dict(user1_id='me', user2_id='o3'),
   dict(user1_id='o3', user2_id='me'),
 ]
-my_profile = port.UserFull(name="Tim", last_active=10, distance=0, degree=0)
-o1_profile = port.UserFull(name="Other 1", first="Other", last_active=1, distance=1, degree=1)
-o2_profile = port.UserFull(name="Other 2", last_active=2, distance=2, degree=2)
-o3_profile = port.UserFull(name="Other 3", last_active=3, distance=1, degree=1)
-o4_profile = port.UserFull(name="Other 4", last_active=4, common_group_names=["Group 1"], starred=True)
+my_profile = port.UserFull(user_id="me", name="Tim", last_active=10, distance=0, degree=0)
+o1_profile = port.UserFull(user_id="o1", name="Other 1", first="Other", last_active=1, distance=1, degree=1)
+o2_profile = port.UserFull(user_id="o2", name="Other 2", last_active=2, distance=2, degree=2)
+o3_profile = port.UserFull(user_id="o3", name="Other 3", last_active=3, distance=1, degree=1)
+o4_profile = port.UserFull(user_id="o4", name="Other 4", last_active=4, common_group_names=["Group 1"], starred=True)
 glob.users = {
   'me': my_profile,
   'o1': o1_profile,
