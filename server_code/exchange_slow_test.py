@@ -24,6 +24,7 @@ class TestExchangeGateway(unittest.TestCase):
     self.request_records_saved = []
     self.exchange_records_saved = []
     self.are_request_rows_to_delete = False
+    self.are_ep_rows_to_delete = False
     self.test_start_dt = sm.now()
     self._email_send = n.email_send
     n.email_send = Mock()
@@ -118,6 +119,7 @@ class TestExchangeGateway(unittest.TestCase):
 
   def test_add_triad_request_exchange_save(self):
     self.are_request_rows_to_delete = True
+    self.are_ep_rows_to_delete = True
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_3to10_in1hr
       prop2 = rt.prop_uA_2to3_in1hr
@@ -150,6 +152,8 @@ class TestExchangeGateway(unittest.TestCase):
     ei.ping = self._ping
     if self.are_request_rows_to_delete:
       rows_created = app_tables.requests.search(rg.requests_fetch, create_dt=q.greater_than_or_equal_to(self.test_start_dt))
+    if self.are_ep_rows_to_delete:
+      ep_rows_created = app_tables.exchange_prospects.search(q.fetch_only(), create_dt=q.greater_than_or_equal_to(self.test_start_dt))
     with anvil.tables.batch_delete:
       for row in [rr._row for rr in self.request_records_saved]:
         row.delete()
@@ -161,4 +165,7 @@ class TestExchangeGateway(unittest.TestCase):
         row.delete()
       if self.are_request_rows_to_delete:
         for row in rows_created:
+          row.delete()
+      if self.are_ep_rows_to_delete:
+        for row in ep_rows_created:
           row.delete()
