@@ -119,7 +119,7 @@ class TestExchangeGateway(unittest.TestCase):
     self.are_request_rows_to_delete = True
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_3to10_in1hr
-      prop2 = rt.prop_uA_3to10_in1hr
+      prop2 = rt.prop_uA_2to3_in1hr
       prop3 = rt.prop_u3_3to10_in1hr
       or_group1 = rst.add_request(USER2, prop1)
       timer.check("1st add_request")
