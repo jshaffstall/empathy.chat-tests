@@ -17,6 +17,7 @@ from empathy_chat import portable as port
 from empathy_chat import exchanges as es
 from empathy_chat import notifies as n
 from anvil_extras.logging import TimerLogger
+from copy import deepcopy
 
 class TestExchangeGateway(unittest.TestCase):
   def setUp(self):
@@ -120,7 +121,8 @@ class TestExchangeGateway(unittest.TestCase):
     with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
       prop1 = rt.prop_u2_3to10_in1hr
       prop2 = rt.prop_uA_2to3_in1hr
-      prop3 = rt.prop_u3_3to10_in1hr
+      prop3 = deepcopy(rt.prop_u3_3to10_in1hr)
+      prop3.eligible_users = [rt.user2_id]
       or_group1 = rst.add_request(USER2, prop1)
       timer.check("1st add_request")
       or_group2 = rst.add_request(ADMIN, prop2)
