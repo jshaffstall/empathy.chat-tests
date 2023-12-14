@@ -114,7 +114,33 @@ class TestExchangeGateway(unittest.TestCase):
     row_2hr = next((row for row in requests 
                     if row['start_dt'] - sm.now() > datetime.timedelta(hours=1.5)))
     self.assertTrue(row_2hr['current'])
-    
+
+  def test_add_triad_request_exchange_save(self):
+    self.are_request_rows_to_delete = True
+    with TimerLogger("  test", format="{name}: {elapsed:6.3f} s | {msg}") as timer:
+      prop1 = rt.prop_u2_3to10_in1hr
+      prop2 = rt.prop_uA_3to10_in1hr
+      prop3 = rt.prop_u3_3to10_in1hr
+      or_group1 = rst.add_request(USER2, prop1)
+      timer.check("1st add_request")
+      or_group2 = rst.add_request(ADMIN, prop2)
+      timer.check("2nd add_request")
+      or_group3 = rst.add_request(USER3, prop3)
+      timer.check("3rd add_request")
+      upcomings = list(eg.exchanges_by_user(USER2, records=True))
+      self.exchange_records_saved.extend(upcomings)
+      self.assertEqual(len(upcomings), 1)
+      timer.check("grab upcomings")
+      match_dicts2 = ei.upcoming_match_dicts(USER2)
+      match_dictsA = ei.upcoming_match_dicts(ADMIN)
+      timer.check("grab match_dicts")
+      self.assertEqual(len(match_dicts2[0]), 5)
+      self.assertEqual(len(match_dicts2), 1)
+      self.assertEqual(len(match_dicts2), len(match_dictsA))
+      for key in match_dicts2[0]:
+        if key != 'other_user_ids':
+          self.assertEqual(match_dicts2[0][key], match_dictsA[0][key])
+  
   def tearDown(self):
     n.email_send = self._email_send
     n.send_sms = self._send_sms
