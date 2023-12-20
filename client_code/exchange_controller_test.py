@@ -80,12 +80,13 @@ class ExchangeControllerTest(unittest.TestCase):
   def get_baseline_update_value(self):
     return dict(status="matched",
                 how_empathy_list=[],
-                their_name="",
                 message_items=[],
                 my_slider_value=3,
-                their_slider_value=None,
-                their_external=False,
-                their_complete=False,
+                them = [dict(name="",
+                             slider_value=None,
+                             external=False,
+                             complete=False,
+                            )]
                )
 
   def test_update_baseline(self):
@@ -96,7 +97,7 @@ class ExchangeControllerTest(unittest.TestCase):
   
   def test_update_slider_name(self):
     update_value = self.get_baseline_update_value()
-    update_value['their_name'] = "their_name"
+    update_value['them'][0]['name'] = "their_name"
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "slider_update")
@@ -105,7 +106,7 @@ class ExchangeControllerTest(unittest.TestCase):
 
   def test_update_slider_value(self):
     update_value = self.get_baseline_update_value()
-    update_value['their_slider_value'] = 5
+    update_value['them'][0]['slider_value'] = 5
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "slider_update")
@@ -114,7 +115,7 @@ class ExchangeControllerTest(unittest.TestCase):
 
   def test_update_external(self):
     update_value = self.get_baseline_update_value()
-    update_value['their_external'] = True
+    update_value['them'][0]['external'] = True
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "their_external_change")
@@ -122,7 +123,7 @@ class ExchangeControllerTest(unittest.TestCase):
 
   def test_update_complete(self):
     update_value = self.get_baseline_update_value()
-    update_value['their_complete'] = True
+    update_value['them'][0]['complete'] = True
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "their_complete_change")
