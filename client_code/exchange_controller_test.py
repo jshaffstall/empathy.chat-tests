@@ -32,7 +32,11 @@ class ExchangeControllerTest(unittest.TestCase):
   #   glob.name = save_glob_name
 
   def get_mock_server_without_my_slider_value(self):
-    mock_server = MockServer(return_values={'init_match_form': ("prop_id", "jitsi_code", 25, None)})
+    mock_server = MockServer(return_values={'init_match_form': dict(request_id="prop_id",
+                                                                    jitsi_code="jitsi_code",
+                                                                    duration=25,
+                                                                    my_slider_value=None,
+                                                                   )})
     ec.server = mock_server
     return mock_server
   
@@ -51,7 +55,11 @@ class ExchangeControllerTest(unittest.TestCase):
     self.assertEqual(state.slider_status, None)
 
   def get_state_with_my_slider_value(self):
-    mock_server = MockServer(return_values={'init_match_form': ("prop_id", "jitsi_code", 25, 3)})
+    mock_server = MockServer(return_values={'init_match_form': dict(request_id="prop_id",
+                                                                    jitsi_code="jitsi_code",
+                                                                    duration=25,
+                                                                    my_slider_value=3,
+                                                                   )})
     ec.server = mock_server
     return ec.ExchangeState.initialized_state("matched")
     
@@ -66,7 +74,11 @@ class ExchangeControllerTest(unittest.TestCase):
   
   def get_update_setup(self, update_value):
     mock_server = MockServer(return_values = {
-      'init_match_form': ("prop_id", "jitsi_code", 25, 3),
+      'init_match_form': dict(request_id="prop_id",
+                              jitsi_code="jitsi_code",
+                              duration=25,
+                              my_slider_value=3,
+                             ),
       'update_match_form': update_value,
     })
     ec.server = mock_server
@@ -79,13 +91,13 @@ class ExchangeControllerTest(unittest.TestCase):
 
   def get_baseline_update_value(self):
     return dict(status="matched",
-                how_empathy_list=[],
                 message_items=[],
                 my_slider_value=3,
                 them = [dict(name="",
                              slider_value=None,
                              external=False,
                              complete=False,
+                             how_empathy="",
                             )]
                )
 
