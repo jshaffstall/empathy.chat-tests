@@ -142,12 +142,13 @@ def _clear_test_records():
 @anvil.server.callable
 def test_get_user_list():
   from anvil import secrets
+  from empathy_chat.exchange_interactor import prune_old_exchanges
   print("('test_get_user_list')")
-  if True: #anvil.users.get_user()['trust_level'] >= sm.TEST_TRUST_LEVEL:  
-    test_user = app_tables.users.get(email=secrets.get_secret('test_user_email'))
-    to_return = [(test_user['email'], test_user.get_id())]
-    users = app_tables.users.search()
-    for u in users:
-      if u != test_user:
-        to_return += [(u['email'], u.get_id())]
-    return to_return
+  prune_old_exchanges()
+  test_user = app_tables.users.get(email=secrets.get_secret('test_user_email'))
+  to_return = [(test_user['email'], test_user.get_id())]
+  users = app_tables.users.search()
+  for u in users:
+    if u != test_user:
+      to_return += [(u['email'], u.get_id())]
+  return to_return
