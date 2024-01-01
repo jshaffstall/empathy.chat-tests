@@ -51,7 +51,7 @@ class ExchangeControllerTest(unittest.TestCase):
     mock_server = self.get_mock_server_without_my_slider_value()
     state = ec.ExchangeState.initialized_state("matched")
     self.assertEqual(state.slider_status, None)
-    state._their['slider_value'] = 7
+    state.them[0]['slider_value'] = 7
     self.assertEqual(state.slider_status, None)
 
   def get_state_with_my_slider_value(self):
@@ -69,7 +69,7 @@ class ExchangeControllerTest(unittest.TestCase):
     
   def test_slider_status_received(self):
     state = self.get_state_with_my_slider_value()
-    state._their['slider_value'] = 7
+    state.them[0]['slider_value'] = 7
     self.assertEqual(state.slider_status, "received")
   
   def get_update_setup(self, update_value):
@@ -113,7 +113,7 @@ class ExchangeControllerTest(unittest.TestCase):
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "slider_update")
-    self.assertEqual(state.their_name, "their_name")
+    self.assertEqual(state.them[0]['name'], "their_name")
     state.exit()
 
   def test_update_slider_value(self):
@@ -122,7 +122,7 @@ class ExchangeControllerTest(unittest.TestCase):
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
     self.assertEqual(collector.dispatches[0].title, "slider_update")
-    self.assertEqual(state._their['slider_value'], 5)
+    self.assertEqual(state.them[0]['slider_value'], 5)
     state.exit()
 
   def test_update_external(self):
@@ -130,7 +130,7 @@ class ExchangeControllerTest(unittest.TestCase):
     update_value['them'][0]['external'] = True
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
-    self.assertEqual(collector.dispatches[0].title, "their_external_change")
+    self.assertEqual(collector.dispatches[0].title, "other_external_change")
     state.exit()
 
   def test_update_complete(self):
@@ -138,7 +138,7 @@ class ExchangeControllerTest(unittest.TestCase):
     update_value['them'][0]['complete'] = True
     state, collector = self.get_update_setup(update_value)
     self.assertEqual(len(collector.dispatches), 1)
-    self.assertEqual(collector.dispatches[0].title, "their_complete_change")
+    self.assertEqual(collector.dispatches[0].title, "other_complete_change")
     state.exit()
   
   def tearDown(self):
