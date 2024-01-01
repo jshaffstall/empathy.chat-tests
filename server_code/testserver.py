@@ -80,7 +80,7 @@ def accept_now_proposal(user_id):
     matcher.propagate_update_needed()
     tester_now_request = ri.now_request(tester)
     if tester_now_request:
-      state = matcher.accept_proposal(tester_now_request.request_id, user_id)
+      state = matcher.accept_proposal(tester_now_request.request_id, user_id=user_id)
       # if state['status'] in ['pinging', 'matched']:
       #   _add_prop_row_to_test_record(tester_now_proptime.proposal._row)
 
