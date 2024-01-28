@@ -97,7 +97,7 @@ db_schema:
       admin_ui: {width: 200}
       type: bool
     - name: request
-      admin_ui: {width: 200}
+      admin_ui: {order: 0.25, width: 200}
       type: link_single
       target: requests
   codes:
@@ -371,7 +371,7 @@ db_schema:
       admin_ui: {width: 200}
       type: bool
     - name: users
-      admin_ui: {width: 200}
+      admin_ui: {order: 3, width: 242}
       type: link_multiple
       target: users
     - name: participants
