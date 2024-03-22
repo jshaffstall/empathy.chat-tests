@@ -641,3 +641,6 @@ secrets:
   test_user3_email:
     value: {? '' : 5bwGUbvDugN6ur/2P15v9oUWIZw4yCrv5Wm4AdmAWYmyOz2ebBPH+mSwT3ayALAgiCNA8rlYJwU0KrP6zpbQXHwtPMrpx1+4wVR9WFHdgSNh8hyyoyy3Ptt4bkXEQ9WQSQdafWqY6fBdhXG2GPkFvPp0Zfr+7w==}
     type: secret
+  test_user2_email:
+    value: {6PVWDILVZB6QDIAE: F4GkVjaYqIqafzkUO+ieW+sr97qSMAeVVunklCLGDfXrcP7nYulhwBNoDURaWuUcFyK8QME8a+00L65XmkZGhSzjLwWmlY8zbELOq0pzLyV8G8aksoIxc5jO/xpvXEt54ZccaEYzM8dMYaZB+E+1uQ==}
+    type: secret
