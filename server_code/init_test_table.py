@@ -5,6 +5,7 @@ from anvil.tables import app_tables
 import anvil.tables.query as q
 import anvil.secrets as secrets
 import datetime
+from empathy_chat import accounts
 
 
 @tables.in_transaction(relaxed=True)
@@ -70,6 +71,7 @@ def init_tables():
   
   user_rows = {row['email']: row for row in app_tables.users.search(email=q.any_of(*list(ems.values())))}
   for u in user_rows.values():
+    accounts.init_user_info(u)
     u.update(test_chars[u['email']])
   
   app_tables.connections.add_rows(
