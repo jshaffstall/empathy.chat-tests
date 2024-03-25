@@ -10,6 +10,7 @@ import empathy_chat.parameters as p
 from empathy_chat import server_misc as sm
 from empathy_chat import requests as rs
 from empathy_chat import groups
+from anvil import tables
 from anvil.tables import app_tables
 
 
@@ -17,7 +18,7 @@ admin_id = ADMIN.get_id()
 user2_id = USER2.get_id()
 user3_id = USER3.get_id()
 
-group0_row = app_tables.groups.search()[0]
+group0_row = app_tables.groups.search(tables.order_by("created"))[0]
 group0 = groups.Group(group0_row['name'], group_id=group0_row.get_id())
 u2 = sm.get_port_user(USER2, distance=0, simple=True)
 time1 = ProposalTime()
