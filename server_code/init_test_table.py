@@ -2,13 +2,15 @@ import anvil.server
 import anvil.tz
 from anvil import tables
 from anvil.tables import app_tables
+import anvil.tables.query as q
 import anvil.secrets as secrets
 import datetime
 
 
+@tables.in_transaction(relaxed=True)
 def init_tables():
   ems = {key: secrets.get_secret(key) for key in ('admin_email', 'test_user2_email', 'test_user3_email')}
-  app_tables.users.add_rows([{'email': ems['admin_email'], 'email': ems['test_user2_email'], 'email': ems['test_user3_email']}])
+  app_tables.users.add_rows([{'email': ems['admin_email']}, {'email': ems['test_user2_email']}, {'email': ems['test_user3_email']}])
   test_chars = { 
     ems['admin_email']: { 'confirmed_email': True,
       'contributor': False,
@@ -66,7 +68,6 @@ def init_tables():
       'url_confirmed_date': None},
   }
   
-  
   user_rows = {row['email']: row for row in app_tables.users.search(email=q.any_of(*list(ems.values())))}
   for u in user_rows.values():
     u.update(test_chars[u['email']])
@@ -107,14 +108,14 @@ def init_tables():
     [ { 'group': group_rows['New Group1a'],
         'guest_allowed': False,
         'invite': None,
-        'user': user_rows[2]},
+        'user': user_rows[ems['test_user3_email']]},
       { 'group': group_rows['New Group4'],
         'guest_allowed': True,
         'invite': None,
-        'user': user_rows[1]},
+        'user': user_rows[ems['test_user2_email']]},
       { 'group': group_rows['New Group4'],
         'guest_allowed': None,
         'invite': None,
-        'user': user_rows[2]},
+        'user': user_rows[ems['test_user3_email']]},
     ]
-)
+  )

@@ -16,10 +16,9 @@ users = app_tables.users.search()
 if len(users) == 0:
   from .init_test_table import init_tables
   init_tables()
-  global users
   users = app_tables.users.search()
 test_ems = {key: secrets.get_secret(key) for key in ('admin_email', 'test_user2_email', 'test_user3_email')}
-test_users = [u for u in users if u['email'] in test_ems]
+test_users = [u for u in users if u['email'] in test_ems.values()]
 (ADMIN, USER2, USER3) = [next((u for u in test_users if u['email'] == test_ems[key])) for key in ('admin_email', 'test_user2_email', 'test_user3_email')]
 
 
