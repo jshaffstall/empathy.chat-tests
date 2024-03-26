@@ -130,7 +130,7 @@ components:
         enabled: true
         foreground: ''
         items: [cancel_now, ping_cancel, match_commence, match_complete, accept_now_proposal,
-          get_status, get_proposals, get_code, add_chat_message]
+          get_status, add_chat_message]
         visible: true
         font_size: null
         font: ''
