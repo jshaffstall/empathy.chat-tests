@@ -9,7 +9,7 @@ services:
   client_config: {enable_v2: true}
   server_config: {}
 - source: /runtime/services/anvil/users.yml
-  client_config: {allow_signup: false, enable_automatically: true, use_email: true, confirm_email: true}
+  client_config: {allow_signup: false, enable_automatically: true, use_email: true, confirm_email: true, use_google: true}
   server_config: {user_table: users}
 - source: /runtime/services/anvil/secrets.yml
   client_config: {}
@@ -17,6 +17,9 @@ services:
 - source: /runtime/services/anvil/email.yml
   client_config: {}
   server_config: {test_mode: true}
+- source: /runtime/services/google.yml
+  client_config: {}
+  server_config: {}
 startup: {type: module, module: startup}
 package_name: empathy_chat_test
 allow_embedding: false
@@ -658,8 +661,11 @@ db_schema:
       type: datetime
 secrets:
   test_user3_email:
-    value: {? '' : 5bwGUbvDugN6ur/2P15v9oUWIZw4yCrv5Wm4AdmAWYmyOz2ebBPH+mSwT3ayALAgiCNA8rlYJwU0KrP6zpbQXHwtPMrpx1+4wVR9WFHdgSNh8hyyoyy3Ptt4bkXEQ9WQSQdafWqY6fBdhXG2GPkFvPp0Zfr+7w==}
+    value: {? '' : 5bwGUbvDugN6ur/2P15v9oUWIZw4yCrv5Wm4AdmAWYmyOz2ebBPH+mSwT3ayALAgiCNA8rlYJwU0KrP6zpbQXHwtPMrpx1+4wVR9WFHdgSNh8hyyoyy3Ptt4bkXEQ9WQSQdafWqY6fBdhXG2GPkFvPp0Zfr+7w==, TPWCFFGONCBTHPZZ: jTpWOF4DF772bbdZY8A75b3ZNMd5/pJkBZ8UN6Qy8n9MMTFAtODfVXwFG8f4RNoZ1c8S4hnv9Ih4TApZCtfJRB2IN3JvQ7oz8bGwj7DTLlaS2joiPRQUi1s87qeEz6p8HrMDMgjLUYKxuQwtP6Q8d2KIXd2EAYBXsjI=}
     type: secret
   test_user2_email:
-    value: {6PVWDILVZB6QDIAE: F4GkVjaYqIqafzkUO+ieW+sr97qSMAeVVunklCLGDfXrcP7nYulhwBNoDURaWuUcFyK8QME8a+00L65XmkZGhSzjLwWmlY8zbELOq0pzLyV8G8aksoIxc5jO/xpvXEt54ZccaEYzM8dMYaZB+E+1uQ==}
+    value: {6PVWDILVZB6QDIAE: F4GkVjaYqIqafzkUO+ieW+sr97qSMAeVVunklCLGDfXrcP7nYulhwBNoDURaWuUcFyK8QME8a+00L65XmkZGhSzjLwWmlY8zbELOq0pzLyV8G8aksoIxc5jO/xpvXEt54ZccaEYzM8dMYaZB+E+1uQ==, TPWCFFGONCBTHPZZ: Nf2QkfDwWLfHpvoadZ5vrPcAmqHOM4ftVg552voKvRx81HYCoOMS55GhIGAp3L9u9g9U0tyjcNFwFtTl5gkfSr93iOYcvr4kk9+s0lz/HpD+WkGl6CppJ3m+RccrqCmPuku418zLq4gKPMnO7U+mvjwv8tOlMLw3nBQ=}
+    type: secret
+  admin_email:
+    value: {TPWCFFGONCBTHPZZ: /KS0jIpH+pJAgRygt33y09XaDRTVhgCIPXFqeFavUSDkrQYui2rQlQU6oJvQTT0PxUmYTjnXEcneomJHnEDB3pybOYfZyFwlavRLS3fF8sZkvFl9sDLolxFhUS7isUusK+Tz9qh3H7iyAJFYSQbQzgxmBs0=}
     type: secret
