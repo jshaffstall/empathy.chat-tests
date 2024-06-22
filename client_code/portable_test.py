@@ -1,3 +1,6 @@
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 import unittest
 from empathy_chat import portable as port
 from .test_helper import UserLoggedIn

@@ -1,5 +1,8 @@
 import anvil.server
 from anvil import *
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 from . import auto_test
 # from anvil_extras.utils import timed
 # from . import network_controller_test

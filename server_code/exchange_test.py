@@ -1,3 +1,6 @@
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 import unittest
 from .misc_server_test import ADMIN, USER2
 from empathy_chat.exchanges import Exchange

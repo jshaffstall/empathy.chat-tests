@@ -1,8 +1,9 @@
 dependencies:
-- app_id: E6HFYSK4HHRI7BTC
-  version: {dev: true}
 - app_id: C6ZZPAPN4YYF5NVJ
   version: {version_tag: v2.5.3}
+- dep_id: dep_8ietbr3fyom6jq
+  version: {dev: false}
+  resolution_hints: {app_id: RADLAS5MQEOV4K2C, name: empathy.chat, package_name: empathy_chat}
 services:
 - source: /runtime/services/tables.yml
   client_config: {enable_v2: true}

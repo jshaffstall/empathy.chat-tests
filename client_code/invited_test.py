@@ -1,3 +1,6 @@
+import anvil.tables as tables
+import anvil.tables.query as q
+from anvil.tables import app_tables
 import unittest
 from .test_helper import MockServer, DispatchCollector, MockNotification
 from empathy_chat import parameters as p
