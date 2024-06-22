@@ -8,8 +8,7 @@ services:
   client_config: {enable_v2: true}
   server_config: {}
 - source: /runtime/services/anvil/users.yml
-  client_config: {allow_signup: false, enable_automatically: true, use_email: true,
-    confirm_email: true}
+  client_config: {allow_signup: false, enable_automatically: true, use_email: true, confirm_email: true}
   server_config: {user_table: users}
 - source: /runtime/services/anvil/secrets.yml
   client_config: {}
@@ -24,50 +23,100 @@ name: empathy.chat test
 runtime_options: {version: 2, client_version: '3', server_version: python3-full, server_spec: null}
 startup_form: null
 db_schema:
-  group_members:
-    title: Group Members
+  exchange_formats:
+    title: Exchange Formats
     client: none
     server: full
     columns:
-    - name: user
+    - name: duration
       admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: group
-      admin_ui: {width: 200}
-      type: link_single
-      target: groups
-    - name: invite
-      admin_ui: {width: 200}
-      type: link_single
-      target: group_invites
-    - name: guest_allowed
-      admin_ui: {width: 200}
-      type: bool
-  group_invites:
-    title: Group Invites
-    client: none
-    server: full
-    columns:
-    - name: link_key
-      admin_ui: {width: 200}
-      type: string
-    - name: group
-      admin_ui: {width: 200}
-      type: link_single
-      target: groups
-    - name: created
-      admin_ui: {width: 200}
-      type: datetime
-    - name: expire_date
-      admin_ui: {width: 200}
-      type: datetime
+      type: number
     - name: spec
       admin_ui: {width: 200}
       type: simpleObject
+  exchanges:
+    title: Exchanges
+    client: none
+    server: full
+    columns:
+    - name: room_code
+      admin_ui: {width: 200}
+      type: string
+    - name: start_dt
+      admin_ui: {width: 200}
+      type: datetime
     - name: current
       admin_ui: {width: 200}
       type: bool
+    - name: start_now
+      admin_ui: {width: 200}
+      type: bool
+    - name: users
+      admin_ui: {order: 3, width: 242}
+      type: link_multiple
+      target: users
+    - name: participants
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: participants
+    - name: exchange_format
+      admin_ui: {width: 200}
+      type: link_single
+      target: exchange_formats
+  appearances:
+    title: Appearances
+    client: none
+    server: full
+    columns:
+    - name: start_dt
+      admin_ui: {width: 200}
+      type: datetime
+    - name: end_dt
+      admin_ui: {width: 200}
+      type: datetime
+  proposal_times:
+    title: Proposal Times
+    client: none
+    server: full
+    columns:
+    - name: expire_date
+      admin_ui: {width: 195.667}
+      type: datetime
+    - name: current
+      admin_ui: {width: 91}
+      type: bool
+    - name: cancelled
+      admin_ui: {width: 200}
+      type: bool
+    - name: proposal
+      admin_ui: {width: 159}
+      type: link_single
+      target: proposals
+    - name: start_date
+      admin_ui: {width: 252}
+      type: datetime
+    - name: start_now
+      admin_ui: {width: 112}
+      type: bool
+    - name: duration
+      admin_ui: {width: 98}
+      type: number
+    - name: users_accepting
+      admin_ui: {width: 158}
+      type: link_multiple
+      target: users
+    - name: fully_accepted
+      admin_ui: {width: 200}
+      type: bool
+    - name: accept_date
+      admin_ui: {width: 200}
+      type: datetime
+    - name: jitsi_code
+      admin_ui: {width: 132.667}
+      type: string
+    - name: missed_pings
+      admin_ui: {width: 142}
+      type: number
   participants:
     title: Participants
     client: none
@@ -100,57 +149,91 @@ db_schema:
       admin_ui: {order: 0.25, width: 200}
       type: link_single
       target: requests
-  exchange_messages:
-    title: Exchange Messages
+  requests:
+    title: Requests
     client: none
     server: full
     columns:
-    - name: exchange
-      admin_ui: {width: 200}
-      type: link_single
-      target: exchanges
     - name: user
-      admin_ui: {width: 200}
+      admin_ui: {width: 93.015872}
       type: link_single
       target: users
-    - name: message
-      admin_ui: {width: 200}
+    - name: or_group_id
+      admin_ui: {width: 130.015872}
       type: string
-    - name: time_stamp
+    - name: pref_order
       admin_ui: {width: 200}
-      type: datetime
-  codes:
-    title: Codes
-    client: none
-    server: full
-    columns:
-    - name: type
-      admin_ui: {width: 200}
-      type: string
-    - name: address
-      admin_ui: {width: 200}
-      type: string
-    - name: code
-      admin_ui: {width: 200}
-      type: string
-    - name: user
-      admin_ui: {width: 200}
+      type: number
+    - name: current
+      admin_ui: {width: 90.015872}
+      type: bool
+    - name: exchange_format
+      admin_ui: {width: 103.0119}
       type: link_single
-      target: users
-    - name: date
-      admin_ui: {width: 200}
-      type: datetime
-  appearances:
-    title: Appearances
-    client: none
-    server: full
-    columns:
+      target: exchange_formats
     - name: start_dt
       admin_ui: {width: 200}
       type: datetime
-    - name: end_dt
+    - name: expire_dt
       admin_ui: {width: 200}
       type: datetime
+    - name: create_dt
+      admin_ui: {width: 200}
+      type: datetime
+    - name: edit_dt
+      admin_ui: {width: 117.0119}
+      type: datetime
+    - name: min_size
+      admin_ui: {width: 89.015872}
+      type: number
+    - name: max_size
+      admin_ui: {width: 100.015872}
+      type: number
+    - name: with_users
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: eligible
+      admin_ui: {width: 87.015872}
+      type: number
+    - name: eligible_users
+      admin_ui: {width: 112.015872}
+      type: link_multiple
+      target: users
+    - name: eligible_groups
+      admin_ui: {width: 121.0119}
+      type: link_multiple
+      target: groups
+    - name: eligible_starred
+      admin_ui: {width: 200}
+      type: bool
+    - name: eligible_invites
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: invites
+    - name: eligible_all
+      admin_ui: {width: 81}
+      type: bool
+  group_members:
+    title: Group Members
+    client: none
+    server: full
+    columns:
+    - name: user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: group
+      admin_ui: {width: 200}
+      type: link_single
+      target: groups
+    - name: invite
+      admin_ui: {width: 200}
+      type: link_single
+      target: group_invites
+    - name: guest_allowed
+      admin_ui: {width: 200}
+      type: bool
   chat:
     title: Chat
     client: none
@@ -170,6 +253,168 @@ db_schema:
     - name: time_stamp
       admin_ui: {width: 200}
       type: datetime
+  prompts:
+    title: Prompts
+    client: none
+    server: full
+    columns:
+    - name: date
+      admin_ui: {width: 200}
+      type: datetime
+    - name: user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: spec
+      admin_ui: {width: 622}
+      type: simpleObject
+    - name: dismissed
+      admin_ui: {width: 200}
+      type: bool
+  matches:
+    title: Matches
+    client: none
+    server: full
+    columns:
+    - name: users
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: proposal_time
+      admin_ui: {width: 200}
+      type: link_single
+      target: proposal_times
+    - name: match_commence
+      admin_ui: {width: 200}
+      type: datetime
+    - name: present
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: complete
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: slider_values
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: late_notified
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: external
+      admin_ui: {width: 200}
+      type: simpleObject
+  proposals:
+    title: Proposals
+    client: none
+    server: full
+    columns:
+    - name: created
+      admin_ui: {width: 200}
+      type: datetime
+    - name: current
+      admin_ui: {width: 95}
+      type: bool
+    - name: user
+      admin_ui: {width: 161}
+      type: link_single
+      target: users
+    - name: last_edited
+      admin_ui: {width: 200}
+      type: datetime
+    - name: eligible
+      admin_ui: {width: 98}
+      type: number
+    - name: eligible_users
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: eligible_groups
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: groups
+    - name: eligible_starred
+      admin_ui: {width: 200}
+      type: bool
+    - name: min_size
+      admin_ui: {width: 200}
+      type: number
+    - name: max_size
+      admin_ui: {width: 200}
+      type: number
+  exchange_messages:
+    title: Exchange Messages
+    client: none
+    server: full
+    columns:
+    - name: exchange
+      admin_ui: {width: 200}
+      type: link_single
+      target: exchanges
+    - name: user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: message
+      admin_ui: {width: 200}
+      type: string
+    - name: time_stamp
+      admin_ui: {width: 200}
+      type: datetime
+  messages:
+    title: Messages
+    client: none
+    server: full
+    columns:
+    - name: from_user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: to_user
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: message
+      admin_ui: {width: 200}
+      type: string
+    - name: time_stamp
+      admin_ui: {width: 200}
+      type: datetime
+  group_invites:
+    title: Group Invites
+    client: none
+    server: full
+    columns:
+    - name: link_key
+      admin_ui: {width: 200}
+      type: string
+    - name: group
+      admin_ui: {width: 200}
+      type: link_single
+      target: groups
+    - name: created
+      admin_ui: {width: 200}
+      type: datetime
+    - name: expire_date
+      admin_ui: {width: 200}
+      type: datetime
+    - name: spec
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: current
+      admin_ui: {width: 200}
+      type: bool
+  stars:
+    title: Stars
+    client: none
+    server: full
+    columns:
+    - name: user1
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: user2
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
   files:
     title: Files
     client: none
@@ -181,6 +426,49 @@ db_schema:
     - name: file
       admin_ui: {width: 200}
       type: media
+  connections:
+    title: Connections
+    client: none
+    server: full
+    columns:
+    - name: user1
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: user2
+      admin_ui: {width: 200}
+      type: link_single
+      target: users
+    - name: date
+      admin_ui: {width: 200}
+      type: datetime
+    - name: relationship2to1
+      admin_ui: {width: 200}
+      type: string
+    - name: date_described
+      admin_ui: {width: 200}
+      type: datetime
+    - name: distance
+      admin_ui: {width: 200}
+      type: number
+    - name: current
+      admin_ui: {width: 200}
+      type: bool
+  exchange_prospects:
+    title: Exchange Prospects
+    client: none
+    server: full
+    columns:
+    - name: requests
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: requests
+    - name: distances
+      admin_ui: {width: 200}
+      type: simpleObject
+    - name: create_dt
+      admin_ui: {width: 200}
+      type: datetime
   invites:
     title: Invites
     client: none
@@ -222,24 +510,62 @@ db_schema:
     - name: current
       admin_ui: {width: 78.015872}
       type: bool
-  prompts:
-    title: Prompts
+  codes:
+    title: Codes
     client: none
     server: full
     columns:
-    - name: date
+    - name: type
       admin_ui: {width: 200}
-      type: datetime
+      type: string
+    - name: address
+      admin_ui: {width: 200}
+      type: string
+    - name: code
+      admin_ui: {width: 200}
+      type: string
     - name: user
       admin_ui: {width: 200}
       type: link_single
       target: users
-    - name: spec
-      admin_ui: {width: 622}
-      type: simpleObject
-    - name: dismissed
+    - name: date
+      admin_ui: {width: 200}
+      type: datetime
+  groups:
+    title: Groups
+    client: none
+    server: full
+    columns:
+    - name: name
+      admin_ui: {width: 200}
+      type: string
+    - name: hosts
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: created
+      admin_ui: {width: 200}
+      type: datetime
+    - name: current
       admin_ui: {width: 200}
       type: bool
+  test_data:
+    title: Test Data
+    client: none
+    server: full
+    columns:
+    - name: test_users
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: users
+    - name: test_times
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: proposal_times
+    - name: test_proposals
+      admin_ui: {width: 200}
+      type: link_multiple
+      target: proposals
   users:
     title: Users
     client: none
@@ -329,333 +655,6 @@ db_schema:
     - name: last_invite
       admin_ui: {width: 144}
       type: datetime
-  proposal_times:
-    title: Proposal Times
-    client: none
-    server: full
-    columns:
-    - name: expire_date
-      admin_ui: {width: 195.667}
-      type: datetime
-    - name: current
-      admin_ui: {width: 91}
-      type: bool
-    - name: cancelled
-      admin_ui: {width: 200}
-      type: bool
-    - name: proposal
-      admin_ui: {width: 159}
-      type: link_single
-      target: proposals
-    - name: start_date
-      admin_ui: {width: 252}
-      type: datetime
-    - name: start_now
-      admin_ui: {width: 112}
-      type: bool
-    - name: duration
-      admin_ui: {width: 98}
-      type: number
-    - name: users_accepting
-      admin_ui: {width: 158}
-      type: link_multiple
-      target: users
-    - name: fully_accepted
-      admin_ui: {width: 200}
-      type: bool
-    - name: accept_date
-      admin_ui: {width: 200}
-      type: datetime
-    - name: jitsi_code
-      admin_ui: {width: 132.667}
-      type: string
-    - name: missed_pings
-      admin_ui: {width: 142}
-      type: number
-  exchanges:
-    title: Exchanges
-    client: none
-    server: full
-    columns:
-    - name: room_code
-      admin_ui: {width: 200}
-      type: string
-    - name: start_dt
-      admin_ui: {width: 200}
-      type: datetime
-    - name: current
-      admin_ui: {width: 200}
-      type: bool
-    - name: start_now
-      admin_ui: {width: 200}
-      type: bool
-    - name: users
-      admin_ui: {order: 3, width: 242}
-      type: link_multiple
-      target: users
-    - name: participants
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: participants
-    - name: exchange_format
-      admin_ui: {width: 200}
-      type: link_single
-      target: exchange_formats
-  stars:
-    title: Stars
-    client: none
-    server: full
-    columns:
-    - name: user1
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: user2
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-  proposals:
-    title: Proposals
-    client: none
-    server: full
-    columns:
-    - name: created
-      admin_ui: {width: 200}
-      type: datetime
-    - name: current
-      admin_ui: {width: 95}
-      type: bool
-    - name: user
-      admin_ui: {width: 161}
-      type: link_single
-      target: users
-    - name: last_edited
-      admin_ui: {width: 200}
-      type: datetime
-    - name: eligible
-      admin_ui: {width: 98}
-      type: number
-    - name: eligible_users
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: users
-    - name: eligible_groups
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: groups
-    - name: eligible_starred
-      admin_ui: {width: 200}
-      type: bool
-    - name: min_size
-      admin_ui: {width: 200}
-      type: number
-    - name: max_size
-      admin_ui: {width: 200}
-      type: number
-  matches:
-    title: Matches
-    client: none
-    server: full
-    columns:
-    - name: users
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: users
-    - name: proposal_time
-      admin_ui: {width: 200}
-      type: link_single
-      target: proposal_times
-    - name: match_commence
-      admin_ui: {width: 200}
-      type: datetime
-    - name: present
-      admin_ui: {width: 200}
-      type: simpleObject
-    - name: complete
-      admin_ui: {width: 200}
-      type: simpleObject
-    - name: slider_values
-      admin_ui: {width: 200}
-      type: simpleObject
-    - name: late_notified
-      admin_ui: {width: 200}
-      type: simpleObject
-    - name: external
-      admin_ui: {width: 200}
-      type: simpleObject
-  exchange_prospects:
-    title: Exchange Prospects
-    client: none
-    server: full
-    columns:
-    - name: requests
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: requests
-    - name: distances
-      admin_ui: {width: 200}
-      type: simpleObject
-    - name: create_dt
-      admin_ui: {width: 200}
-      type: datetime
-  exchange_formats:
-    title: Exchange Formats
-    client: none
-    server: full
-    columns:
-    - name: duration
-      admin_ui: {width: 200}
-      type: number
-    - name: spec
-      admin_ui: {width: 200}
-      type: simpleObject
-  messages:
-    title: Messages
-    client: none
-    server: full
-    columns:
-    - name: from_user
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: to_user
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: message
-      admin_ui: {width: 200}
-      type: string
-    - name: time_stamp
-      admin_ui: {width: 200}
-      type: datetime
-  test_data:
-    title: Test Data
-    client: none
-    server: full
-    columns:
-    - name: test_users
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: users
-    - name: test_times
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: proposal_times
-    - name: test_proposals
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: proposals
-  groups:
-    title: Groups
-    client: none
-    server: full
-    columns:
-    - name: name
-      admin_ui: {width: 200}
-      type: string
-    - name: hosts
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: users
-    - name: created
-      admin_ui: {width: 200}
-      type: datetime
-    - name: current
-      admin_ui: {width: 200}
-      type: bool
-  requests:
-    title: Requests
-    client: none
-    server: full
-    columns:
-    - name: user
-      admin_ui: {width: 93.015872}
-      type: link_single
-      target: users
-    - name: or_group_id
-      admin_ui: {width: 130.015872}
-      type: string
-    - name: pref_order
-      admin_ui: {width: 200}
-      type: number
-    - name: current
-      admin_ui: {width: 90.015872}
-      type: bool
-    - name: exchange_format
-      admin_ui: {width: 103.0119}
-      type: link_single
-      target: exchange_formats
-    - name: start_dt
-      admin_ui: {width: 200}
-      type: datetime
-    - name: expire_dt
-      admin_ui: {width: 200}
-      type: datetime
-    - name: create_dt
-      admin_ui: {width: 200}
-      type: datetime
-    - name: edit_dt
-      admin_ui: {width: 117.0119}
-      type: datetime
-    - name: min_size
-      admin_ui: {width: 89.015872}
-      type: number
-    - name: max_size
-      admin_ui: {width: 100.015872}
-      type: number
-    - name: with_users
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: users
-    - name: eligible
-      admin_ui: {width: 87.015872}
-      type: number
-    - name: eligible_users
-      admin_ui: {width: 112.015872}
-      type: link_multiple
-      target: users
-    - name: eligible_groups
-      admin_ui: {width: 121.0119}
-      type: link_multiple
-      target: groups
-    - name: eligible_starred
-      admin_ui: {width: 200}
-      type: bool
-    - name: eligible_invites
-      admin_ui: {width: 200}
-      type: link_multiple
-      target: invites
-    - name: eligible_all
-      admin_ui: {width: 81}
-      type: bool
-  connections:
-    title: Connections
-    client: none
-    server: full
-    columns:
-    - name: user1
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: user2
-      admin_ui: {width: 200}
-      type: link_single
-      target: users
-    - name: date
-      admin_ui: {width: 200}
-      type: datetime
-    - name: relationship2to1
-      admin_ui: {width: 200}
-      type: string
-    - name: date_described
-      admin_ui: {width: 200}
-      type: datetime
-    - name: distance
-      admin_ui: {width: 200}
-      type: number
-    - name: current
-      admin_ui: {width: 200}
-      type: bool
 secrets:
   test_user3_email:
     value: {? '' : 5bwGUbvDugN6ur/2P15v9oUWIZw4yCrv5Wm4AdmAWYmyOz2ebBPH+mSwT3ayALAgiCNA8rlYJwU0KrP6zpbQXHwtPMrpx1+4wVR9WFHdgSNh8hyyoyy3Ptt4bkXEQ9WQSQdafWqY6fBdhXG2GPkFvPp0Zfr+7w==}
